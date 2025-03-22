@@ -26,6 +26,6 @@
     }
   },
   "sap.platform.cf": {
-    "ui5VersionNumber": "1.117.*"
+    "ui5VersionNumber": "1.120.*"
   }
 }
