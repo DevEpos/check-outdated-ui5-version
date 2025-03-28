@@ -70,7 +70,7 @@ export class UI5VersionChecker {
     if (this._newVersion) return this._newVersion;
 
     for (const [vId, v] of this.ui5Versions) {
-      if (v.eocp || v.eom) continue;
+      if (v.eocpInfo || v.eom) continue;
       if (this.useLTS && !v.lts) continue;
       this._newVersion = vId;
       break;
@@ -128,7 +128,7 @@ export class UI5VersionChecker {
     const mfVers = manifest.version;
     if (manifest.version.patchUpdates) {
       const matchingVersion = this.ui5Versions.get(manifest.version.strVer);
-      valid = !!(matchingVersion && !matchingVersion.eocp);
+      valid = !!(matchingVersion && !matchingVersion.eocpInfo);
       validPatch = valid;
       eom = !!matchingVersion?.eom;
     } else {
@@ -137,7 +137,7 @@ export class UI5VersionChecker {
       valid = !!matchingVersion;
 
       const matchingPatch = this.ui5Patches.get(mfVers.strVer);
-      if (matchingPatch && !matchingPatch.eocp) {
+      if (matchingPatch && !matchingPatch.eocpInfo) {
         validPatch = true;
       }
     }

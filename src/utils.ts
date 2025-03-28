@@ -1,6 +1,11 @@
 import path from "path";
 import * as core from "@actions/core";
 
+export function getReminderBeforeEcopDays() {
+  const configuredTime = parseInt(core.getInput("reminderBeforeEocp", { trimWhitespace: true }));
+  return isNaN(configuredTime) ? 30 : configuredTime;
+}
+
 export function getRepoPath() {
   const githubWorkspace = process.env["GITHUB_WORKSPACE"];
   if (!githubWorkspace) {

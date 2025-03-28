@@ -19,16 +19,23 @@ type ExternalUI5VersionPatch = {
   hidden?: boolean;
 };
 
+type EocpInfo = {
+  eocp: boolean;
+  inEocpQuarter: boolean;
+  remainingDaysToEocp?: number;
+  eocpDate: Date;
+};
+
 export type UI5Version = {
   semver: semver.SemVer;
   lts: boolean;
   eom: boolean;
-  eocp: boolean;
+  eocpInfo: EocpInfo | undefined;
 };
 
 export type UI5VersionPatch = {
   semver: semver.SemVer;
-  eocp: boolean;
+  eocpInfo: EocpInfo | undefined;
 };
 
 export type UI5VersionOverview = {
@@ -36,7 +43,7 @@ export type UI5VersionOverview = {
   patches: Map<string, UI5VersionPatch>;
 };
 
-const yearQuarterToDate = new Map<string, boolean>();
+const yearQuarterToDate = new Map<string, EocpInfo>();
 
 /**
  * @returns array of valid UI5 versions to be used in SAP BTP
@@ -51,7 +58,7 @@ export async function fetchMaintainedVersions(): Promise<UI5VersionOverview> {
   ui5Versions.patches
     .filter((p) => !p.removed && !p.hidden)
     .forEach((p) => {
-      patchMap.set(p.version, { semver: semver.coerce(p.version as string)!, eocp: checkEocp(p.eocp) });
+      patchMap.set(p.version, { semver: semver.coerce(p.version as string)!, eocpInfo: checkEocp(p.eocp) });
     });
 
   if (!ui5Versions.versions?.length) throw new Error(`No UI5 versions found in response`);
@@ -62,7 +69,7 @@ export async function fetchMaintainedVersions(): Promise<UI5VersionOverview> {
       semver: semver.coerce(v.version)!,
       lts: v.lts,
       eom: v.support !== "Maintenance",
-      eocp: checkEocp(v.eocp)
+      eocpInfo: checkEocp(v.eocp)
     });
   });
 
@@ -70,18 +77,29 @@ export async function fetchMaintainedVersions(): Promise<UI5VersionOverview> {
 }
 
 function checkEocp(yearQuarter: string) {
-  let eocpForYearQuarter = yearQuarterToDate.get(yearQuarter);
-  if (eocpForYearQuarter !== undefined) return eocpForYearQuarter;
+  let eocpInfo = yearQuarterToDate.get(yearQuarter);
+  if (eocpInfo !== undefined) return eocpInfo;
 
   const matchRes = yearQuarter.match(/Q([1-4])\/(\d+)/);
-  if (!matchRes?.length) return false;
+  if (!matchRes?.length) return undefined;
 
   const quarter = parseInt(matchRes[1]);
   const month = quarter === 1 ? 0 : quarter === 2 ? 3 : quarter === 3 ? 6 : 9;
   const year = parseInt(matchRes[2]);
 
-  const dateForYearQuarter = new Date(year, month, 0);
-  eocpForYearQuarter = dateForYearQuarter < new Date();
-  yearQuarterToDate.set(yearQuarter, eocpForYearQuarter);
-  return eocpForYearQuarter;
+  const dateForYearQuarterStart = new Date(Date.UTC(year, month, 1));
+  const dateForQueryQuarterEnd = new Date(Date.UTC(year, month + 3, 0));
+  const now = new Date();
+
+  eocpInfo = {
+    eocp: dateForQueryQuarterEnd > now,
+    eocpDate: dateForQueryQuarterEnd, // NOTE: there is actually a 1 week buffer until removal
+    inEocpQuarter: dateForYearQuarterStart < now && dateForQueryQuarterEnd > now,
+    remainingDaysToEocp: Math.floor(
+      Math.abs(dateForQueryQuarterEnd.valueOf() - dateForYearQuarterStart.valueOf()) / (1000 * 60 * 60 * 24)
+    )
+  };
+
+  yearQuarterToDate.set(yearQuarter, eocpInfo);
+  return eocpInfo;
 }

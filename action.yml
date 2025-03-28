@@ -11,6 +11,10 @@ inputs:
     description: >
       A comma or newline-separated list of file paths that point to a folder containing a `manifest.json` file of a UI5
       application. The paths can also be specified using glob patterns like app/**/webapp
+  reminderBeforeEocp:
+    description: >
+      Specify a duration in days, where a used version should be marked with a warning status to show a eocp is imminent
+    default: "30"
   fixOutdated:
     description: >
       Automatically updates the used UI5 version to either the latest or lts UI5 version available
