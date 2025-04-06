@@ -1,16 +1,21 @@
 import { jest } from "@jest/globals";
-import { mockCoreWithEmptyImpl } from "../__fixtures__/core.js";
-import { mockNodeFetch } from "../__fixtures__/fetch.js";
-import { fetchMaintainedVersions } from "../src/ui5-versions.js";
+import { mockCoreWithEmptyImpl } from "../__fixtures__/core";
+import { mockNodeFetch } from "../__fixtures__/fetch";
+import { BaseVersionInfo, fetchMaintainedVersions, UI5Version } from "../src/lib/ui5-version-api";
+import semver from "semver";
 
 const { mock: fetchMock, mockFetchResponse } = mockNodeFetch();
 
-describe("ui5-versions.ts", () => {
+describe("ui5-version-api.ts", () => {
+  jest.useFakeTimers();
+
   beforeEach(() => {
     fetchMock.mockClear();
   });
 
   afterEach(() => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    (BaseVersionInfo as any).quarterToEocpInfo.clear();
     jest.resetAllMocks();
     jest.restoreAllMocks();
   });
@@ -26,6 +31,7 @@ describe("ui5-versions.ts", () => {
   });
 
   it("Versions could be fetched successfully", async () => {
+    jest.setSystemTime(new Date(2026));
     mockCoreWithEmptyImpl();
     mockFetchResponse(mockedVersionsOverview);
 
@@ -33,6 +39,58 @@ describe("ui5-versions.ts", () => {
     expect(versions).toBeDefined();
     expect(versions.versions.size).toBe(mockedVersionsOverview.versions.length);
     expect(versions.patches.size).toBe([...mockedVersionsOverview.patches].filter((p) => !p.removed).length);
+  });
+
+  it("Version before eocp quarter", () => {
+    jest.setSystemTime(new Date(2025, 5, 1));
+    const versionToTest = new UI5Version(semver.coerce("1.132.*")!, "Q1/2026", true, true);
+
+    expect(versionToTest?.eocp).toBeFalsy();
+    expect(versionToTest?.eocpDate).toEqual(new Date(Date.UTC(2026, 3, 0)));
+    expect(versionToTest?.eom).toBeTruthy();
+    expect(versionToTest?.isInEocpQuarter).toBeFalsy();
+    expect(versionToTest.remainingDaysToEocp).toBe(-1);
+  });
+
+  it("Version in eocp quarter", () => {
+    jest.setSystemTime(new Date(2026, 2, 15));
+    const versionToTest = new UI5Version(semver.coerce("1.132.*")!, "Q1/2026", true, true);
+
+    expect(versionToTest?.eocp).toBeFalsy();
+    expect(versionToTest?.eocpDate).toEqual(new Date(Date.UTC(2026, 3, 0)));
+    expect(versionToTest?.eom).toBeTruthy();
+    expect(versionToTest?.isInEocpQuarter).toBeTruthy();
+    expect(versionToTest.remainingDaysToEocp).toBe(16);
+  });
+
+  it("Version reached eocp", () => {
+    jest.setSystemTime(new Date(2026, 4, 10));
+    const versionToTest = new UI5Version(semver.coerce("1.132.*")!, "Q1/2026", true, true);
+
+    expect(versionToTest?.eocp).toBeTruthy();
+    expect(versionToTest?.eocpDate).toEqual(new Date(Date.UTC(2026, 3, 0)));
+    expect(versionToTest?.eom).toBeTruthy();
+    expect(versionToTest?.isInEocpQuarter).toBeFalsy();
+    expect(versionToTest.remainingDaysToEocp).toBe(-1);
+  });
+
+  it("Version has no eocp quarter yet", () => {
+    const versionToTest = new UI5Version(semver.coerce("1.132.*")!, "", true, true);
+
+    expect(versionToTest.eocp).toBeFalsy();
+  });
+
+  it("Test year quarter conversion", () => {
+    jest.setSystemTime(new Date(2026, 0, 1));
+    expect(new UI5Version(semver.coerce("1.132.*")!, "Q2/2026", true, true).eocpDate).toEqual(
+      new Date(Date.UTC(2026, 6, 0))
+    );
+    expect(new UI5Version(semver.coerce("1.132.*")!, "Q3/2026", true, true).eocpDate).toEqual(
+      new Date(Date.UTC(2026, 9, 0))
+    );
+    expect(new UI5Version(semver.coerce("1.132.*")!, "Q4/2026", true, true).eocpDate).toEqual(
+      new Date(Date.UTC(2026, 12, 0))
+    );
   });
 });
 

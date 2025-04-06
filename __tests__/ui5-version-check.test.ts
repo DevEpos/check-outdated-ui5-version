@@ -1,6 +1,6 @@
 import { mockCoreWithEmptyImpl } from "../__fixtures__/core";
 import { mockNodeFetch } from "../__fixtures__/fetch";
-import { UI5VersionChecker } from "../src/ui5-version-check";
+import { UI5VersionChecker } from "../src/lib/ui5-version-check";
 import fs from "fs";
 
 const { mock: fetchMock, mockFetchResponse } = mockNodeFetch();
@@ -149,7 +149,7 @@ describe("ui5-version-check.ts", () => {
 
     const versionChecker = new UI5VersionChecker(manifestPaths);
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    expect((versionChecker as any).validateVersion({})).toEqual({ eom: false, valid: false, validPatch: false });
+    expect((versionChecker as any).validateVersion({})).toEqual({ valid: false, messages: [] });
   });
 });
 

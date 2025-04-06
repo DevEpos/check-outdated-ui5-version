@@ -1,5 +1,5 @@
 import * as core from "@actions/core";
-import { getInputAsArray, getRepoPath } from "../src/utils";
+import { getAllowedDaysBeforeEocp, getInputAsArray, getRepoPath } from "../src/lib/utils";
 import { mockCoreWithEmptyImpl } from "../__fixtures__/core";
 
 describe("utils.ts", () => {
@@ -28,5 +28,15 @@ describe("utils.ts", () => {
   it("Array input successfully retrieved from core.getInput", () => {
     jest.spyOn(core, "getInput").mockReturnValueOnce("app/**/test\nrouter");
     expect(getInputAsArray("manifestPaths")).toBeDefined();
+  });
+
+  it("Invalid number in 'allowedDaysBeforeEocp'", () => {
+    process.env["INPUT_ALLOWEDDAYSBEFOREEOCP"] = "ss";
+    expect(getAllowedDaysBeforeEocp()).toBe(30);
+  });
+
+  it("Valid number in 'allowedDaysBeforeEocp'", () => {
+    process.env["INPUT_ALLOWEDDAYSBEFOREEOCP"] = "10";
+    expect(getAllowedDaysBeforeEocp()).toBe(10);
   });
 });

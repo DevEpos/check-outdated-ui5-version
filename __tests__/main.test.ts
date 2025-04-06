@@ -1,8 +1,8 @@
 import { jest } from "@jest/globals";
 import { mockCoreWithEmptyImpl } from "../__fixtures__/core";
 import { run } from "../src/main";
-import * as ui5VersionCheck from "../src/ui5-version-check";
-import * as utils from "../src/utils";
+import * as ui5VersionCheck from "../src/lib/ui5-version-check";
+import * as utils from "../src/lib/utils";
 
 describe("main.ts", () => {
   const oldEnv = process.env;
