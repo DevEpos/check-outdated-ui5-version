@@ -67,7 +67,7 @@ describe("version-validation.ts (before eocp quarter)", () => {
     );
     expect(validator.validate()).toEqual({
       valid: false,
-      messages: [{ msg: "Version 1.117.* is invalid or reached end of cloud provisioning", type: "error" }]
+      messages: [{ msg: "Version 1.117.* is invalid or reached end of cloud provisioning!", type: "error" }]
     });
   });
 
@@ -88,7 +88,7 @@ describe("version-validation.ts (before eocp quarter)", () => {
     );
     expect(validator.validate()).toEqual({
       valid: false,
-      messages: [{ msg: "Version reached end of maintenance", type: "error" }]
+      messages: [{ msg: "Version reached end of maintenance!", type: "error" }]
     });
   });
 
@@ -109,7 +109,7 @@ describe("version-validation.ts (before eocp quarter)", () => {
     );
     expect(validator.validate()).toEqual({
       valid: true,
-      messages: [{ msg: "Version reached end of maintenance", type: "warn" }]
+      messages: [{ msg: "Version reached end of maintenance!", type: "warn" }]
     });
   });
 
@@ -130,7 +130,7 @@ describe("version-validation.ts (before eocp quarter)", () => {
     );
     expect(validator.validate()).toEqual({
       valid: false,
-      messages: [{ msg: "Version reached end of maintenance", type: "error" }]
+      messages: [{ msg: "Version reached end of maintenance!", type: "error" }]
     });
   });
 
@@ -151,7 +151,7 @@ describe("version-validation.ts (before eocp quarter)", () => {
     );
     expect(validator.validate()).toEqual({
       valid: false,
-      messages: [{ msg: "Version 1.117.1 is invalid or reached end of cloud provisioning", type: "error" }]
+      messages: [{ msg: "Version 1.117.1 is invalid or reached end of cloud provisioning!", type: "error" }]
     });
   });
 

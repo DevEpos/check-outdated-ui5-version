@@ -58,13 +58,13 @@ describe("ui5-manifest.ts", () => {
       { msg: "Unsafe", type: "warn" }
     ]);
     expect(manifest.versionStatus).toBe("warn");
-    expect(manifest.versionStatusText).toBe("Eom\nUnsafe");
+    expect(manifest.versionStatusText).toBe("Eom<br/>Unsafe");
     expect(manifest.getSummary()).toEqual([
       { data: manifest.relPath },
       { data: "-" },
       { data: "-" },
       { data: "⚠️" },
-      { data: "Eom\nUnsafe" }
+      { data: "Eom<br/>Unsafe" }
     ]);
 
     manifest.setErrorStatus([{ msg: "Eocp reached", type: "error" }]);

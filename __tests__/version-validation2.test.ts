@@ -31,7 +31,7 @@ describe("version-validation.ts (in eocp quarter)", () => {
     );
     expect(validator.validate()).toEqual({
       valid: true,
-      messages: [{ msg: "Version nearing end of cloud provisioning. Remaining days 16", type: "warn" }]
+      messages: [{ msg: "Version is near the end of cloud provisioning (16 days remaining)!", type: "warn" }]
     });
   });
 
@@ -52,7 +52,7 @@ describe("version-validation.ts (in eocp quarter)", () => {
     );
     expect(validator.validate()).toEqual({
       valid: false,
-      messages: [{ msg: "End of cloud provisioning for version imminent. Remaining days 16", type: "error" }]
+      messages: [{ msg: "End of cloud provisioning for version imminent (16 days remaining)!", type: "error" }]
     });
   });
 });

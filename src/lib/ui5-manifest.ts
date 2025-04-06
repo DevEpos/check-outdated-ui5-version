@@ -57,7 +57,7 @@ export class UI5AppManifest {
   setNoChangeStatus(messages: ValidationMessage[]) {
     if (messages.length) {
       this.versionStatus = "warn";
-      this.versionStatusText = messages.map((m) => m.msg).join("\n");
+      this.versionStatusText = messages.map((m) => m.msg).join("<br/>");
     } else {
       this.versionStatus = "ok";
       this.versionStatusText = `No change required`;
@@ -66,7 +66,7 @@ export class UI5AppManifest {
 
   setErrorStatus(messages: ValidationMessage[]) {
     this.versionStatus = "error";
-    this.versionStatusText = messages.map((m) => m.msg).join("\n");
+    this.versionStatusText = messages.map((m) => m.msg).join("<br/>");
   }
 
   getSummary() {
