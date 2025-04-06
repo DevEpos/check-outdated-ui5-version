@@ -70,3 +70,7 @@ For scheduled jobs to periodically check for outdated UI5 versions
 | ---------------- | ----------------------------------------------------------------------------------------------------------- |
 | `foundManifests` | List of `manifest.json` file paths that have been found according to the specified paths in `manifestPaths` |
 | `modifiedFiles`  | List of `manifest.json` files that have been updated. Can be used to pass to e.g. an action to create a PR  |
+
+## Example of action result
+
+![Action Result](docs/img/action-result.png)
