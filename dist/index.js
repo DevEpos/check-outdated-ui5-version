@@ -11501,6 +11501,20 @@ function requirePool () {
 	      ? { ...options.interceptors }
 	      : undefined;
 	    this[kFactory] = factory;
+
+	    this.on('connectionError', (origin, targets, error) => {
+	      // If a connection error occurs, we remove the client from the pool,
+	      // and emit a connectionError event. They will not be re-used.
+	      // Fixes https://github.com/nodejs/undici/issues/3895
+	      for (const target of targets) {
+	        // Do not use kRemoveClient here, as it will close the client,
+	        // but the client cannot be closed in this state.
+	        const idx = this[kClients].indexOf(target);
+	        if (idx !== -1) {
+	          this[kClients].splice(idx, 1);
+	        }
+	      }
+	    });
 	  }
 
 	  [kGetDispatcher] () {
@@ -14962,6 +14976,7 @@ function requireHeaders () {
 	  isValidHeaderName,
 	  isValidHeaderValue
 	} = requireUtil$5();
+	const util = require$$0$2;
 	const { webidl } = requireWebidl();
 	const assert = require$$0$3;
 
@@ -15508,6 +15523,9 @@ function requireHeaders () {
 	  [Symbol.toStringTag]: {
 	    value: 'Headers',
 	    configurable: true
+	  },
+	  [util.inspect.custom]: {
+	    enumerable: false
 	  }
 	});
 
@@ -21397,9 +21415,10 @@ function requireUtil$1 () {
 	if (hasRequiredUtil$1) return util$1;
 	hasRequiredUtil$1 = 1;
 
-	const assert = require$$0$3;
-	const { kHeadersList } = requireSymbols$4();
-
+	/**
+	 * @param {string} value
+	 * @returns {boolean}
+	 */
 	function isCTLExcludingHtab (value) {
 	  if (value.length === 0) {
 	    return false
@@ -21660,31 +21679,13 @@ function requireUtil$1 () {
 	  return out.join('; ')
 	}
 
-	let kHeadersListNode;
-
-	function getHeadersList (headers) {
-	  if (headers[kHeadersList]) {
-	    return headers[kHeadersList]
-	  }
-
-	  if (!kHeadersListNode) {
-	    kHeadersListNode = Object.getOwnPropertySymbols(headers).find(
-	      (symbol) => symbol.description === 'headers list'
-	    );
-
-	    assert(kHeadersListNode, 'Headers cannot be parsed');
-	  }
-
-	  const headersList = headers[kHeadersListNode];
-	  assert(headersList);
-
-	  return headersList
-	}
-
 	util$1 = {
 	  isCTLExcludingHtab,
-	  stringify,
-	  getHeadersList
+	  validateCookieName,
+	  validateCookiePath,
+	  validateCookieValue,
+	  toIMFDate,
+	  stringify
 	};
 	return util$1;
 }
@@ -22022,7 +22023,7 @@ function requireCookies () {
 	hasRequiredCookies = 1;
 
 	const { parseSetCookie } = requireParse$1();
-	const { stringify, getHeadersList } = requireUtil$1();
+	const { stringify } = requireUtil$1();
 	const { webidl } = requireWebidl();
 	const { Headers } = requireHeaders();
 
@@ -22098,14 +22099,13 @@ function requireCookies () {
 
 	  webidl.brandCheck(headers, Headers, { strict: false });
 
-	  const cookies = getHeadersList(headers).cookies;
+	  const cookies = headers.getSetCookie();
 
 	  if (!cookies) {
 	    return []
 	  }
 
-	  // In older versions of undici, cookies is a list of name:value.
-	  return cookies.map((pair) => parseSetCookie(Array.isArray(pair) ? pair[1] : pair))
+	  return cookies.map((pair) => parseSetCookie(pair))
 	}
 
 	/**
@@ -29458,6 +29458,7 @@ class LRUCache {
     #max;
     #maxSize;
     #dispose;
+    #onInsert;
     #disposeAfter;
     #fetchMethod;
     #memoMethod;
@@ -29539,6 +29540,7 @@ class LRUCache {
     #hasDispose;
     #hasFetchMethod;
     #hasDisposeAfter;
+    #hasOnInsert;
     /**
      * Do not call this method unless you need to inspect the
      * inner workings of the cache.  If anything returned by this
@@ -29616,13 +29618,19 @@ class LRUCache {
         return this.#dispose;
     }
     /**
+     * {@link LRUCache.OptionsBase.onInsert} (read-only)
+     */
+    get onInsert() {
+        return this.#onInsert;
+    }
+    /**
      * {@link LRUCache.OptionsBase.disposeAfter} (read-only)
      */
     get disposeAfter() {
         return this.#disposeAfter;
     }
     constructor(options) {
-        const { max = 0, ttl, ttlResolution = 1, ttlAutopurge, updateAgeOnGet, updateAgeOnHas, allowStale, dispose, disposeAfter, noDisposeOnSet, noUpdateTTL, maxSize = 0, maxEntrySize = 0, sizeCalculation, fetchMethod, memoMethod, noDeleteOnFetchRejection, noDeleteOnStaleGet, allowStaleOnFetchRejection, allowStaleOnFetchAbort, ignoreFetchAbort, } = options;
+        const { max = 0, ttl, ttlResolution = 1, ttlAutopurge, updateAgeOnGet, updateAgeOnHas, allowStale, dispose, onInsert, disposeAfter, noDisposeOnSet, noUpdateTTL, maxSize = 0, maxEntrySize = 0, sizeCalculation, fetchMethod, memoMethod, noDeleteOnFetchRejection, noDeleteOnStaleGet, allowStaleOnFetchRejection, allowStaleOnFetchAbort, ignoreFetchAbort, } = options;
         if (max !== 0 && !isPosInt(max)) {
             throw new TypeError('max option must be a nonnegative integer');
         }
@@ -29666,6 +29674,9 @@ class LRUCache {
         if (typeof dispose === 'function') {
             this.#dispose = dispose;
         }
+        if (typeof onInsert === 'function') {
+            this.#onInsert = onInsert;
+        }
         if (typeof disposeAfter === 'function') {
             this.#disposeAfter = disposeAfter;
             this.#disposed = [];
@@ -29675,6 +29686,7 @@ class LRUCache {
             this.#disposed = undefined;
         }
         this.#hasDispose = !!this.#dispose;
+        this.#hasOnInsert = !!this.#onInsert;
         this.#hasDisposeAfter = !!this.#disposeAfter;
         this.noDisposeOnSet = !!noDisposeOnSet;
         this.noUpdateTTL = !!noUpdateTTL;
@@ -30242,6 +30254,9 @@ class LRUCache {
             if (status)
                 status.set = 'add';
             noUpdateTTL = false;
+            if (this.#hasOnInsert) {
+                this.#onInsert?.(v, k, 'add');
+            }
         }
         else {
             // update
@@ -30282,6 +30297,9 @@ class LRUCache {
             }
             else if (status) {
                 status.set = 'update';
+            }
+            if (this.#hasOnInsert) {
+                this.onInsert?.(v, k, v === oldVal ? 'update' : 'replace');
             }
         }
         if (ttl !== 0 && !this.#ttls) {
@@ -37802,50 +37820,10 @@ function requireSemver () {
 
 var semverExports = requireSemver();
 
-const VERSION_OVERVIEW_URL = "https://ui5.sap.com/versionoverview.json";
-const yearQuarterToDate = new Map();
-/**
- * @returns array of valid UI5 versions to be used in SAP BTP
- */
-async function fetchMaintainedVersions() {
-    coreExports.info(`Checking ${VERSION_OVERVIEW_URL} for available UI5 versions...`);
-    const res = await fetch(VERSION_OVERVIEW_URL);
-    const ui5Versions = (await res.json());
-    const patchMap = new Map();
-    ui5Versions.patches
-        .filter((p) => !p.removed && !p.hidden)
-        .forEach((p) => {
-        patchMap.set(p.version, { semver: semverExports.coerce(p.version), eocp: checkEocp(p.eocp) });
-    });
-    if (!ui5Versions.versions?.length)
-        throw new Error(`No UI5 versions found in response`);
-    const versionMap = new Map();
-    ui5Versions.versions.forEach((v) => {
-        versionMap.set(v.version, {
-            semver: semverExports.coerce(v.version),
-            lts: v.lts,
-            eom: v.support !== "Maintenance",
-            eocp: checkEocp(v.eocp)
-        });
-    });
-    return { versions: versionMap, patches: patchMap };
+function getAllowedDaysBeforeEocp() {
+    const configuredTime = parseInt(coreExports.getInput("allowedDaysBeforeEocp", { trimWhitespace: true }));
+    return isNaN(configuredTime) ? 30 : configuredTime;
 }
-function checkEocp(yearQuarter) {
-    let eocpForYearQuarter = yearQuarterToDate.get(yearQuarter);
-    if (eocpForYearQuarter !== undefined)
-        return eocpForYearQuarter;
-    const matchRes = yearQuarter.match(/Q([1-4])\/(\d+)/);
-    if (!matchRes?.length)
-        return false;
-    const quarter = parseInt(matchRes[1]);
-    const month = quarter === 1 ? 0 : quarter === 2 ? 3 : quarter === 3 ? 6 : 9;
-    const year = parseInt(matchRes[2]);
-    const dateForYearQuarter = new Date(year, month, 0);
-    eocpForYearQuarter = dateForYearQuarter < new Date();
-    yearQuarterToDate.set(yearQuarter, eocpForYearQuarter);
-    return eocpForYearQuarter;
-}
-
 function getRepoPath() {
     const githubWorkspace = process.env["GITHUB_WORKSPACE"];
     if (!githubWorkspace) {
@@ -37865,11 +37843,246 @@ function getStringAsArray(str) {
         .filter((x) => x !== "");
 }
 
+class UI5AppManifest {
+    relPath;
+    fullPath;
+    content;
+    version;
+    newVersion = "-";
+    versionStatus = "ok";
+    versionStatusText = "-";
+    constructor(relPath) {
+        this.relPath = relPath;
+        this.fullPath = require$$1$5.join(getRepoPath(), this.relPath);
+        this.content = readFileSync(this.fullPath, { encoding: "utf8" });
+        this.version = this.determineVersion();
+    }
+    determineVersion() {
+        const manifestJson = JSON.parse(this.content);
+        const currentVersionStr = manifestJson["sap.platform.cf"]?.ui5VersionNumber?.replace(/[xX]/, "*");
+        if (!currentVersionStr) {
+            this.versionStatusText = `No section 'sap.platform.cf/ui5VersionNumber' found. Skipping check`;
+            return;
+        }
+        const currentSemver = semverExports.coerce(currentVersionStr);
+        return {
+            strVer: currentVersionStr,
+            semver: currentSemver,
+            patchUpdates: /\d+\.\d+\.\*/.test(currentVersionStr),
+            toPatchUpdateVers: () => `${currentSemver?.major}.${currentSemver?.minor}.*`
+        };
+    }
+    updateVersion(version, isLTS) {
+        const manifestContent = this.content.replace(/("sap\.platform\.cf"\s*:\s*\{\s*"ui5VersionNumber"\s*:\s*")(.*)(")/, `$1${version}$3`);
+        writeFileSync(this.fullPath, manifestContent, { encoding: "utf8" });
+        this.newVersion = version;
+        /* istanbul ignore next */
+        this.versionStatusText = `Version has been updated to latest ${isLTS ? "LTS" : ""} version`;
+        this.versionStatus = "ok";
+    }
+    setNoChangeStatus(messages) {
+        if (messages.length) {
+            this.versionStatus = "warn";
+            this.versionStatusText = messages.map((m) => m.msg).join("\n");
+        }
+        else {
+            this.versionStatus = "ok";
+            this.versionStatusText = `No change required`;
+        }
+    }
+    setErrorStatus(messages) {
+        this.versionStatus = "error";
+        this.versionStatusText = messages.map((m) => m.msg).join("\n");
+    }
+    getSummary() {
+        return [
+            { data: this.relPath },
+            { data: this.version?.strVer ?? "-" },
+            { data: this.newVersion },
+            { data: this.versionStatus === "ok" ? "✅" : this.versionStatus === "warn" ? "⚠️" : "❌" },
+            { data: this.versionStatusText }
+        ];
+    }
+}
+
+const VERSION_OVERVIEW_URL = "https://ui5.sap.com/versionoverview.json";
+/**
+ * @returns array of valid UI5 versions to be used in SAP BTP
+ */
+async function fetchMaintainedVersions() {
+    coreExports.info(`Checking ${VERSION_OVERVIEW_URL} for available UI5 versions...`);
+    const res = await fetch(VERSION_OVERVIEW_URL);
+    const ui5Versions = (await res.json());
+    const patchMap = new Map();
+    ui5Versions.patches
+        .filter((p) => !p.removed && !p.hidden)
+        .forEach((p) => {
+        patchMap.set(p.version, new UI5VersionPatch(semverExports.coerce(p.version), p.eocp));
+    });
+    if (!ui5Versions.versions?.length)
+        throw new Error(`No UI5 versions found in response`);
+    const versionMap = new Map();
+    ui5Versions.versions.forEach((v) => {
+        versionMap.set(v.version, new UI5Version(semverExports.coerce(v.version), v.eocp, v.lts, v.support !== "Maintenance"));
+    });
+    return { versions: versionMap, patches: patchMap };
+}
+class BaseVersionInfo {
+    static quarterToEocpInfo = new Map();
+    eocpYearQuarter;
+    semver;
+    constructor(semver, eocp) {
+        this.semver = semver;
+        this.eocpYearQuarter = eocp;
+    }
+    get eocp() {
+        return !!this.checkEocp()?.eocp;
+    }
+    get eocpDate() {
+        return this.checkEocp()?.eocpDate;
+    }
+    get isInEocpQuarter() {
+        return !!this.checkEocp()?.inEocpQuarter;
+    }
+    get remainingDaysToEocp() {
+        return this.checkEocp()?.remainingDaysToEocp;
+    }
+    checkEocp() {
+        let eocpInfo = BaseVersionInfo.quarterToEocpInfo.get(this.eocpYearQuarter);
+        if (eocpInfo !== undefined)
+            return eocpInfo;
+        const matchRes = this.eocpYearQuarter.match(/Q([1-4])\/(\d+)/);
+        if (!matchRes?.length)
+            return undefined;
+        const quarter = parseInt(matchRes[1]);
+        const month = quarter === 1 ? 0 : quarter === 2 ? 3 : quarter === 3 ? 6 : 9;
+        const year = parseInt(matchRes[2]);
+        const dateForYearQuarterStart = new Date(Date.UTC(year, month, 1));
+        const dateForYearQuarterEnd = new Date(Date.UTC(year, month + 3, 0));
+        const now = new Date();
+        eocpInfo = {
+            eocp: now > dateForYearQuarterEnd,
+            eocpDate: dateForYearQuarterEnd, // NOTE: there is actually a 1 week buffer until removal
+            inEocpQuarter: dateForYearQuarterStart < now && dateForYearQuarterEnd > now,
+            remainingDaysToEocp: dateForYearQuarterStart > now || now > dateForYearQuarterEnd
+                ? -1
+                : Math.floor(Math.abs(dateForYearQuarterEnd.valueOf() - now.valueOf()) / (1000 * 60 * 60 * 24))
+        };
+        BaseVersionInfo.quarterToEocpInfo.set(this.eocpYearQuarter, eocpInfo);
+        return eocpInfo;
+    }
+}
+class UI5Version extends BaseVersionInfo {
+    lts;
+    eom;
+    constructor(semver, eocp, lts, eom) {
+        super(semver, eocp);
+        this.lts = lts;
+        this.eom = eom;
+    }
+}
+class UI5VersionPatch extends BaseVersionInfo {
+}
+
+class VersionValidator {
+    mfVers;
+    ui5Versions;
+    ui5Patches;
+    allowedDaysBeforeEocp;
+    eomAllowed;
+    isValid = false;
+    messages = [];
+    constructor(mfVers, ui5Versions, ui5Patches, allowedDaysBeforeEocp, eomAllowed) {
+        this.mfVers = mfVers;
+        this.ui5Versions = ui5Versions;
+        this.ui5Patches = ui5Patches;
+        this.allowedDaysBeforeEocp = allowedDaysBeforeEocp;
+        this.eomAllowed = eomAllowed;
+    }
+    validate() {
+        if (this.mfVers.patchUpdates) {
+            this.validatePatchUpdateVersion();
+        }
+        else {
+            this.validateSpecificVersion();
+        }
+        return { valid: this.isValid, messages: this.messages };
+    }
+    validateSpecificVersion() {
+        const matchingVersion = this.ui5Versions.get(this.mfVers.toPatchUpdateVers());
+        if (!matchingVersion || matchingVersion.eocp) {
+            this.addInvalidMsg();
+            return;
+        }
+        if (!this.checkEom(matchingVersion.eom))
+            return;
+        const matchingPatch = this.ui5Patches.get(this.mfVers.strVer);
+        if (!matchingPatch) {
+            const patchSemver = this.mfVers.semver;
+            this.messages.push({
+                msg: `Patch ${patchSemver.patch} of version ${patchSemver.major}.${patchSemver.minor} is not available`,
+                type: "error"
+            });
+            return;
+        }
+        if (this.checkRemainingDays(matchingPatch)) {
+            this.isValid = true;
+        }
+    }
+    validatePatchUpdateVersion() {
+        const matchingVersion = this.ui5Versions.get(this.mfVers.strVer);
+        if (!matchingVersion || matchingVersion.eocp) {
+            this.addInvalidMsg();
+            return;
+        }
+        if (!this.checkEom(matchingVersion.eom))
+            return;
+        if (this.checkRemainingDays(matchingVersion)) {
+            this.isValid = true;
+        }
+    }
+    checkEom(eom) {
+        if (!eom)
+            return true;
+        const msg = `Version reached end of maintenance`;
+        const type = this.eomAllowed ? "warn" : "error";
+        this.messages.push({ msg, type });
+        return type !== "error";
+    }
+    addInvalidMsg() {
+        this.messages.push({
+            msg: `Version ${this.mfVers.strVer} is invalid or reached end of cloud provisioning`,
+            type: "error"
+        });
+    }
+    checkRemainingDays(version) {
+        const { isInEocpQuarter, remainingDaysToEocp } = version;
+        if (isInEocpQuarter && remainingDaysToEocp) {
+            if (remainingDaysToEocp < this.allowedDaysBeforeEocp) {
+                this.messages.push({
+                    msg: `End of cloud provisioning for version imminent. Remaining days ${remainingDaysToEocp}`,
+                    type: "error"
+                });
+                return false;
+            }
+            else {
+                this.messages.push({
+                    msg: `Version nearing end of cloud provisioning. Remaining days ${remainingDaysToEocp}`,
+                    type: "warn"
+                });
+                return true;
+            }
+        }
+        return true;
+    }
+}
+
 class UI5VersionChecker {
     manifestPaths;
     fixOutdated;
     useLTS;
     eomAllowed;
+    allowedDaysBeforeEocp;
     ui5Versions;
     ui5Patches;
     updatedFiles = [];
@@ -37881,6 +38094,7 @@ class UI5VersionChecker {
         this.fixOutdated = coreExports.getBooleanInput("fixOutdated");
         this.useLTS = coreExports.getBooleanInput("useLTS");
         this.eomAllowed = coreExports.getBooleanInput("eomAllowed");
+        this.allowedDaysBeforeEocp = getAllowedDaysBeforeEocp();
     }
     async run() {
         coreExports.startGroup("Loading UI5 versions");
@@ -37938,130 +38152,36 @@ class UI5VersionChecker {
     checkManifest(manifest) {
         if (!manifest?.version)
             return;
-        // determine if the current version is a valid one
-        const { valid, validPatch, eom } = this.validateVersion(manifest);
+        const { valid, messages } = this.validateVersion(manifest);
         if (this.fixOutdated) {
-            if (!validPatch || (eom && !this.eomAllowed)) {
+            if (!valid) {
                 // fix the version in the manifest
                 manifest.updateVersion(this.newVersion, this.useLTS);
                 this.updatedFiles.push(manifest.relPath);
             }
             else {
-                manifest.setNoChangeStatus(eom);
+                manifest.setNoChangeStatus(messages);
             }
         }
         else {
-            if (validPatch) {
-                if (eom && !this.eomAllowed) {
-                    this.errorCount++;
-                    manifest.setErrorStatus(validPatch, valid, eom);
-                }
-                else {
-                    manifest.setNoChangeStatus(eom);
-                }
+            if (valid) {
+                manifest.setNoChangeStatus(messages);
             }
             else {
                 this.errorCount++;
-                manifest.setErrorStatus(valid, false, false);
+                manifest.setErrorStatus(messages);
             }
         }
     }
     validateVersion(manifest) {
         if (!manifest.version) {
             /* istanbul ignore next */
-            return { valid: false, validPatch: false, eom: false };
-        }
-        let valid = false;
-        let validPatch = false;
-        let eom = false;
-        const mfVers = manifest.version;
-        if (manifest.version.patchUpdates) {
-            const matchingVersion = this.ui5Versions.get(manifest.version.strVer);
-            valid = !!(matchingVersion && !matchingVersion.eocp);
-            validPatch = valid;
-            eom = !!matchingVersion?.eom;
+            return { valid: false, messages: [] };
         }
         else {
-            const matchingVersion = this.ui5Versions.get(mfVers.toPatchUpdateVers());
-            eom = !!matchingVersion?.eom;
-            valid = !!matchingVersion;
-            const matchingPatch = this.ui5Patches.get(mfVers.strVer);
-            if (matchingPatch && !matchingPatch.eocp) {
-                validPatch = true;
-            }
+            const validator = new VersionValidator(manifest.version, this.ui5Versions, this.ui5Patches, this.allowedDaysBeforeEocp, this.eomAllowed);
+            return validator.validate();
         }
-        return { valid, validPatch, eom };
-    }
-}
-class UI5AppManifest {
-    relPath;
-    fullPath;
-    content;
-    version;
-    newVersion = "-";
-    versionStatus = "ok";
-    versionStatusText = "-";
-    constructor(relPath) {
-        this.relPath = relPath;
-        this.fullPath = require$$1$5.join(getRepoPath(), this.relPath);
-        this.content = readFileSync(this.fullPath, { encoding: "utf8" });
-        this.version = this.determineVersion();
-    }
-    determineVersion() {
-        const manifestJson = JSON.parse(this.content);
-        const currentVersionStr = manifestJson["sap.platform.cf"]?.ui5VersionNumber?.replace(/[xX]/, "*");
-        if (!currentVersionStr) {
-            this.versionStatusText = `No section 'sap.platform.cf/ui5VersionNumber' found. Skipping check`;
-            return;
-        }
-        const currentSemver = semverExports.coerce(currentVersionStr);
-        return {
-            strVer: currentVersionStr,
-            semver: currentSemver,
-            patchUpdates: /\d+\.\d+\.\*/.test(currentVersionStr),
-            toPatchUpdateVers: () => `${currentSemver?.major}.${currentSemver?.minor}.*`
-        };
-    }
-    updateVersion(version, isLTS) {
-        const manifestContent = this.content.replace(/("sap\.platform\.cf"\s*:\s*\{\s*"ui5VersionNumber"\s*:\s*")(.*)(")/, `$1${version}$3`);
-        writeFileSync(this.fullPath, manifestContent, { encoding: "utf8" });
-        this.newVersion = version;
-        /* istanbul ignore next */
-        this.versionStatusText = `Version has been updated to latest ${isLTS ? "LTS" : ""} version`;
-        this.versionStatus = "ok";
-    }
-    setNoChangeStatus(eom) {
-        if (eom) {
-            this.versionStatus = "warn";
-            this.versionStatusText = `Version ${this.version.strVer} has reached end of maintenance. Consider updating to maintenance version`;
-        }
-        else {
-            this.versionStatus = "ok";
-            this.versionStatusText = `No change required`;
-        }
-    }
-    setErrorStatus(valid, validPatch, eom) {
-        this.versionStatus = "error";
-        const vers = this.version;
-        if (validPatch && eom) {
-            this.versionStatusText = `Version ${this.version.strVer} has reach end of maintenance`;
-        }
-        else if (valid) {
-            // only the patch is invalid
-            this.versionStatusText = `Patch ${vers.semver.patch} of version ${vers.semver.major}.${vers.semver.minor} is not available`;
-        }
-        else {
-            this.versionStatusText = `Version ${vers.strVer} is invalid or reached end of cloud provisioning`;
-        }
-    }
-    getSummary() {
-        return [
-            { data: this.relPath },
-            { data: this.version?.strVer ?? "-" },
-            { data: this.newVersion },
-            { data: this.versionStatus === "ok" ? "✅" : this.versionStatus === "warn" ? "⚠️" : "❌" },
-            { data: this.versionStatusText }
-        ];
     }
 }
 
