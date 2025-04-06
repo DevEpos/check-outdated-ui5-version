@@ -1,8 +1,8 @@
 import path from "path";
 import * as core from "@actions/core";
 
-export function getReminderBeforeEcopDays() {
-  const configuredTime = parseInt(core.getInput("reminderBeforeEocp", { trimWhitespace: true }));
+export function getAllowedDaysBeforeEocp() {
+  const configuredTime = parseInt(core.getInput("allowedDaysBeforeEocp", { trimWhitespace: true }));
   return isNaN(configuredTime) ? 30 : configuredTime;
 }
 

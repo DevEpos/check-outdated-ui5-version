@@ -1,7 +1,7 @@
 import * as core from "@actions/core";
 import { glob } from "glob";
-import { UI5VersionChecker } from "./ui5-version-check.js";
-import * as utils from "./utils.js";
+import { UI5VersionChecker } from "./lib/ui5-version-check.js";
+import * as utils from "./lib/utils.js";
 
 /**
  * The main function for the action.
