@@ -37883,7 +37883,7 @@ class UI5AppManifest {
     setNoChangeStatus(messages) {
         if (messages.length) {
             this.versionStatus = "warn";
-            this.versionStatusText = messages.map((m) => m.msg).join("\n");
+            this.versionStatusText = messages.map((m) => m.msg).join("<br/>");
         }
         else {
             this.versionStatus = "ok";
@@ -37892,7 +37892,7 @@ class UI5AppManifest {
     }
     setErrorStatus(messages) {
         this.versionStatus = "error";
-        this.versionStatusText = messages.map((m) => m.msg).join("\n");
+        this.versionStatusText = messages.map((m) => m.msg).join("<br/>");
     }
     getSummary() {
         return [
@@ -38044,14 +38044,14 @@ class VersionValidator {
     checkEom(eom) {
         if (!eom)
             return true;
-        const msg = `Version reached end of maintenance`;
+        const msg = `Version reached end of maintenance!`;
         const type = this.eomAllowed ? "warn" : "error";
         this.messages.push({ msg, type });
         return type !== "error";
     }
     addInvalidMsg() {
         this.messages.push({
-            msg: `Version ${this.mfVers.strVer} is invalid or reached end of cloud provisioning`,
+            msg: `Version ${this.mfVers.strVer} is invalid or reached end of cloud provisioning!`,
             type: "error"
         });
     }
@@ -38060,14 +38060,14 @@ class VersionValidator {
         if (isInEocpQuarter && remainingDaysToEocp) {
             if (remainingDaysToEocp < this.allowedDaysBeforeEocp) {
                 this.messages.push({
-                    msg: `End of cloud provisioning for version imminent. Remaining days ${remainingDaysToEocp}`,
+                    msg: `End of cloud provisioning for version imminent (${remainingDaysToEocp} days remaining)!`,
                     type: "error"
                 });
                 return false;
             }
             else {
                 this.messages.push({
-                    msg: `Version nearing end of cloud provisioning. Remaining days ${remainingDaysToEocp}`,
+                    msg: `Version is near the end of cloud provisioning (${remainingDaysToEocp} days remaining)!`,
                     type: "warn"
                 });
                 return true;
