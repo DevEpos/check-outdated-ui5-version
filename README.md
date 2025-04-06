@@ -56,12 +56,13 @@ For scheduled jobs to periodically check for outdated UI5 versions
 
 ### Action inputs
 
-| Name            | Description                                                                                                                         | Required | Default |
-| --------------- | ----------------------------------------------------------------------------------------------------------------------------------- | -------- | ------- |
-| `manifestPaths` | List of newline or comma-separated paths to folders that contain a `manifest.json` file. <br/> **Note**: Glob patterns can be used  | ✅       |         |
-| `fixOutdated`   | If `true` the outdated version will be updated to the latest (LTS) version                                                          |          | `false` |
-| `useLTS`        | Can be used to update to the latest LTS version that is currently available                                                         |          | `false` |
-| `eomAllowed`    | If `true`, versions that are no longer maintained but have not yet reached the end of cloud provisioning will only produce warnings |          | `true`  |
+| Name                    | Description                                                                                                                                                                                                  | Required | Default |
+| ----------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | -------- | ------- |
+| `manifestPaths`         | List of newline or comma-separated paths to folders that contain a `manifest.json` file. <br/> **Note**: Glob patterns can be used                                                                           | ✅       |         |
+| `eomAllowed`            | If `true`, versions that are no longer maintained but have not yet reached the end of cloud provisioning will only produce warnings                                                                          |          | `true`  |
+| `allowedDaysBeforeEocp` | Number of allowed days before the eocp. Is only relevant if the current date falls into the eocp quarter.<br/>**Note**: Produces warnings when the remaining number of days is higher then the allowed value |          | `30`    |
+| `fixOutdated`           | If `true` the outdated version will be updated to the latest (LTS) version                                                                                                                                   |          | `false` |
+| `useLTS`                | Can be used to update to the latest LTS version that is currently available                                                                                                                                  |          | `false` |
 
 ### Action outputs
 
