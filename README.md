@@ -77,7 +77,7 @@ jobs:
 | ---------------- | ----------------------------------------------------------------------------------------------------------- |
 | `foundManifests` | List of `manifest.json` file paths that have been found according to the specified paths in `manifestPaths` |
 | `modifiedFiles`  | List of `manifest.json` files that have been updated. Can be used to pass to e.g. an action to create a PR  |
-| `summary`        | Check summary as html string as printed to the action output ([see](#example-of-action-result))             |
+| `summary`        | Check summary as HTML string as printed to the action output ([see](#example-of-action-result))             |
 
 ## Example of action result
 

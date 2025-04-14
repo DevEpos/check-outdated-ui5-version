@@ -36,7 +36,7 @@ outputs:
   modifiedFiles:
     description: List of newline-separated file paths of manifest.json files that have been updated
   summary:
-    description: Summary of all checked manifest files (as html string)
+    description: Summary of all checked manifest files (as HTML string)
 
 runs:
   using: node20
