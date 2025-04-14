@@ -28,30 +28,37 @@ For workflows running in pull requests.
 For scheduled jobs to periodically check for outdated UI5 versions
 
 ````yaml
-- name: Check UI5 versions
-  id: fix-ui5
-  uses: DevEpos/check-outdated-ui5-version@v1
-  with:
-    fixOutdated: true
-    useLTS: true
-    manifestPaths: |
-      router
-      app/**/webapp
+name: Fix outdated UI5 versions
+on:
+  schedule:
+    - cron: "30 0 * * 1"
+  workflow_dispatch:
 
-- name: Create Pull Request
-  if: ${{ steps.fix-ui5.outputs.modifiedFiles != '' }}
-  uses: peter-evans/create-pull-request@v7
-  with:
-    commit-message: "chore: update outdated UI5 versions"
-    branch: "update-ui5-versions/patch"
-    title: "Update Outdated UI5 Versions"
-    add-paths: ${{ steps.fix-ui5.outputs.modifiedFiles }}
-    body: |
-      This pull request updates the outdated UI5 versions found in the following files:
+jobs:
+  - name: Check/update UI5 versions
+    id: fix-ui5
+    uses: DevEpos/check-outdated-ui5-version@v1
+    with:
+      fixOutdated: true
+      useLTS: true
+      manifestPaths: |
+        router
+        app/**/webapp
 
-      ```
-      ${{ steps.fix-ui5.outputs.modifiedFiles }}
-      ```
+  - name: Create Pull Request
+    if: ${{ steps.fix-ui5.outputs.modifiedFiles != '' }}
+    uses: peter-evans/create-pull-request@v7
+    with:
+      commit-message: "chore: update outdated UI5 versions"
+      branch: "update-ui5-versions/patch"
+      title: "Update Outdated UI5 Versions"
+      add-paths: ${{ steps.fix-ui5.outputs.modifiedFiles }}
+      body: |
+        This pull request updates the outdated UI5 versions found in the following files:
+
+        ```
+        ${{ steps.fix-ui5.outputs.modifiedFiles }}
+        ```
 ````
 
 ### Action inputs
@@ -70,6 +77,7 @@ For scheduled jobs to periodically check for outdated UI5 versions
 | ---------------- | ----------------------------------------------------------------------------------------------------------- |
 | `foundManifests` | List of `manifest.json` file paths that have been found according to the specified paths in `manifestPaths` |
 | `modifiedFiles`  | List of `manifest.json` files that have been updated. Can be used to pass to e.g. an action to create a PR  |
+| `summary`        | Check summary as html string as printed to the action output ([see](#example-of-action-result))             |
 
 ## Example of action result
 
