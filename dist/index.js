@@ -38213,7 +38213,8 @@ async function run() {
         if (ui5VersChecker.hasErrors) {
             coreExports.setFailed("Some manifest.json files contain invalid/outdated versions");
         }
-        coreExports.summary.write();
+        coreExports.setOutput("summary", coreExports.summary.stringify());
+        await coreExports.summary.write();
     }
     catch (error) {
         // Fail the workflow run if an error occurs
