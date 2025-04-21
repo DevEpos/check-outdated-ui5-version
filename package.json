@@ -2,7 +2,7 @@
   "name": "check-outdated-ui5-version",
   "description": "GitHub Action to check/update outdated UI5 versions, available on SAP BTP",
   "version": "1.2.0",
-  "author": "",
+  "author": "DevEpos",
   "type": "module",
   "private": true,
   "homepage": "https://github.com/DevEpos/check-outdated-ui5-version",
@@ -41,7 +41,8 @@
   "dependencies": {
     "@actions/core": "^1.11.1",
     "glob": "^11.0.1",
-    "semver": "^7.7.1"
+    "semver": "^7.7.1",
+    "ui5-version-check": "^0.0.6"
   },
   "devDependencies": {
     "@eslint/compat": "^1.2.7",

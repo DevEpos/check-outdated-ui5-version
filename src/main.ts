@@ -1,6 +1,6 @@
 import * as core from "@actions/core";
 import { glob } from "glob";
-import { UI5VersionChecker } from "./lib/ui5-version-check.js";
+import { UI5VersionCheck } from "ui5-version-check";
 import * as utils from "./lib/utils.js";
 
 /**
@@ -28,10 +28,22 @@ export async function run(): Promise<void> {
     core.info(`Resolved the following manifest file paths: ${resolvedManifestPaths}`);
     core.endGroup();
 
-    const ui5VersChecker = new UI5VersionChecker(resolvedManifestPaths);
-    await ui5VersChecker.run();
+    const ui5VersCheck = new UI5VersionCheck(
+      utils.getRepoPath(),
+      resolvedManifestPaths,
+      core.getBooleanInput("fixOutdated"),
+      core.getBooleanInput("useLTS"),
+      core.getBooleanInput("eomAllowed"),
+      utils.getAllowedDaysBeforeEocp()
+    );
 
-    ui5VersChecker.printSummary();
+    await ui5VersCheck.run();
+
+    if (ui5VersCheck.updatedFiles.length > 0) {
+      core.setOutput("modifiedFiles", ui5VersCheck.updatedFiles.join("\n"));
+    }
+    // TODO: create action summary
+    // ui5VersChecker.printSummary();
 
     core.summary.addBreak();
     core.summary.addLink(
@@ -39,7 +51,7 @@ export async function run(): Promise<void> {
       "https://ui5.sap.com/versionoverview.html"
     );
 
-    if (ui5VersChecker.hasErrors) {
+    if (ui5VersCheck.hasErrors) {
       core.setFailed("Some manifest.json files contain invalid/outdated versions");
     }
     core.setOutput("summary", core.summary.stringify());

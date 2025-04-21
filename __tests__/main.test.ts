@@ -1,7 +1,7 @@
 import { jest } from "@jest/globals";
 import { mockCoreWithEmptyImpl } from "../__fixtures__/core";
 import { run } from "../src/main";
-import * as ui5VersionCheck from "../src/lib/ui5-version-check";
+import * as ui5VersionCheck from "ui5-version-check";
 import * as utils from "../src/lib/utils";
 
 describe("main.ts", () => {
@@ -28,9 +28,9 @@ describe("main.ts", () => {
     jest.spyOn(utils, "getRepoPath").mockReturnValueOnce(__dirname);
     jest.spyOn(utils, "getInputAsArray").mockReturnValueOnce(["sample-project/app/**/webapp"]);
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    jest.spyOn(ui5VersionCheck as any, "UI5VersionChecker").mockImplementation(() => ({
-      run: jest.fn(),
-      printSummary: jest.fn()
+    jest.spyOn(ui5VersionCheck as any, "UI5VersionCheck").mockImplementation(() => ({
+      run: jest.fn()
+      // printSummary: jest.fn()
     }));
 
     await expect(run()).resolves.toBeUndefined();
@@ -62,9 +62,9 @@ describe("main.ts", () => {
     jest.spyOn(utils, "getRepoPath").mockReturnValueOnce(__dirname);
     jest.spyOn(utils, "getInputAsArray").mockReturnValueOnce(["sample-project/app/**/webapp"]);
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    jest.spyOn(ui5VersionCheck as any, "UI5VersionChecker").mockImplementation(() => ({
+    jest.spyOn(ui5VersionCheck as any, "UI5VersionCheck").mockImplementation(() => ({
       run: jest.fn(),
-      printSummary: jest.fn(),
+      // printSummary: jest.fn(),
       get hasErrors() {
         return true;
       }
@@ -81,9 +81,9 @@ describe("main.ts", () => {
     jest.spyOn(utils, "getRepoPath").mockReturnValueOnce(__dirname);
     jest.spyOn(utils, "getInputAsArray").mockReturnValueOnce(["sample-project/app/**/webapp"]);
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    jest.spyOn(ui5VersionCheck as any, "UI5VersionChecker").mockImplementation(() => ({
+    jest.spyOn(ui5VersionCheck as any, "UI5VersionCheck").mockImplementation(() => ({
       run: () => Promise.reject(new Error("Version fetch failed!")),
-      printSummary: jest.fn(),
+      // printSummary: jest.fn(),
       get hasErrors() {
         return true;
       }
