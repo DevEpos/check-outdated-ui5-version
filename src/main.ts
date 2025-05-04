@@ -1,7 +1,26 @@
 import * as core from "@actions/core";
 import { glob } from "glob";
-import { UI5VersionCheck } from "ui5-version-check";
+import * as ui5VersionCheck from "ui5-version-check";
 import * as utils from "./lib/utils.js";
+
+function printSummary(summary: ui5VersionCheck.ManifestCheckSummary[]) {
+  core.summary.addTable([
+    [
+      { data: "Manifest path", header: true },
+      { data: "Found version", header: true },
+      { data: "Updated version", header: true },
+      { data: "Status", header: true },
+      { data: "Description", header: true }
+    ],
+    ...summary.map((s) => [
+      { data: s.relPath },
+      { data: s.oldVers },
+      { data: s.newVers },
+      { data: s.statusIcon },
+      { data: s.statusText }
+    ])
+  ]);
+}
 
 /**
  * The main function for the action.
@@ -28,22 +47,30 @@ export async function run(): Promise<void> {
     core.info(`Resolved the following manifest file paths: ${resolvedManifestPaths}`);
     core.endGroup();
 
-    const ui5VersCheck = new UI5VersionCheck(
-      utils.getRepoPath(),
-      resolvedManifestPaths,
-      core.getBooleanInput("fixOutdated"),
-      core.getBooleanInput("useLTS"),
-      core.getBooleanInput("eomAllowed"),
-      utils.getAllowedDaysBeforeEocp()
-    );
+    ui5VersionCheck.setLogger({
+      info: core.info,
+      group: core.startGroup,
+      groupEnd: core.endGroup,
+      warn: core.warning,
+      error: core.error,
+      notice: core.notice
+    });
+
+    const ui5VersCheck = new ui5VersionCheck.UI5VersionCheck({
+      basePath: utils.getRepoPath(),
+      manifestPaths: resolvedManifestPaths,
+      fixOutdated: core.getBooleanInput("fixOutdated"),
+      useLTS: core.getBooleanInput("useLTS"),
+      eomAllowed: core.getBooleanInput("eomAllowed"),
+      allowedDaysBeforeEocp: utils.getAllowedDaysBeforeEocp()
+    });
 
     await ui5VersCheck.run();
 
     if (ui5VersCheck.updatedFiles.length > 0) {
       core.setOutput("modifiedFiles", ui5VersCheck.updatedFiles.join("\n"));
     }
-    // TODO: create action summary
-    // ui5VersChecker.printSummary();
+    printSummary(ui5VersCheck.summary);
 
     core.summary.addBreak();
     core.summary.addLink(

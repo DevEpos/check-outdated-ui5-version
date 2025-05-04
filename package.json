@@ -42,7 +42,7 @@
     "@actions/core": "^1.11.1",
     "glob": "^11.0.1",
     "semver": "^7.7.1",
-    "ui5-version-check": "^0.0.6"
+    "ui5-version-check": "0.1.2"
   },
   "devDependencies": {
     "@eslint/compat": "^1.2.7",
