@@ -17,6 +17,7 @@ export function mockCoreWithEmptyImpl() {
   summary.write = jest.spyOn(core.summary, "write").mockImplementation(() => Promise.resolve(undefined) as any);
 
   const mock = {
+    getBooleanInput: jest.spyOn(core, "getBooleanInput").mockImplementation(() => true),
     info: jest.spyOn(core, "info").mockImplementation(() => {}),
     error: jest.spyOn(core, "error").mockImplementation(() => {}),
     debug: jest.spyOn(core, "debug").mockImplementation(() => {}),

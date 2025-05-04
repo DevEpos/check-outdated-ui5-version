@@ -57,7 +57,7 @@ export async function run(): Promise<void> {
     });
 
     const ui5VersCheck = new ui5VersionCheck.UI5VersionCheck({
-      basePath: utils.getRepoPath(),
+      basePath: repoPath,
       manifestPaths: resolvedManifestPaths,
       fixOutdated: core.getBooleanInput("fixOutdated"),
       useLTS: core.getBooleanInput("useLTS"),
