@@ -1,7 +1,7 @@
 import require$$0 from 'os';
 import require$$0$1 from 'crypto';
-import require$$1, { realpathSync as realpathSync$1, readlinkSync, readdirSync, readdir as readdir$1, lstatSync, readFileSync, writeFileSync } from 'fs';
-import require$$1$5 from 'path';
+import require$$1, { realpathSync as realpathSync$1, readlinkSync, readdirSync, readdir as readdir$1, lstatSync } from 'fs';
+import require$$1$6 from 'path';
 import require$$2 from 'http';
 import require$$3 from 'https';
 import require$$0$4 from 'net';
@@ -18,10 +18,10 @@ import require$$1$2 from 'node:util';
 import require$$0$6, { EventEmitter } from 'node:events';
 import require$$0$8 from 'worker_threads';
 import require$$2$1 from 'perf_hooks';
-import require$$5 from 'util/types';
+import require$$1$3 from 'util/types';
 import require$$4$1 from 'async_hooks';
-import require$$1$3 from 'console';
-import require$$1$4 from 'url';
+import require$$1$4 from 'console';
+import require$$1$5 from 'url';
 import require$$3$1 from 'zlib';
 import require$$6 from 'string_decoder';
 import require$$0$9 from 'diagnostics_channel';
@@ -43,17 +43,17 @@ var core = {};
 
 var command = {};
 
-var utils$1 = {};
+var utils$2 = {};
 
-var hasRequiredUtils$1;
+var hasRequiredUtils$2;
 
-function requireUtils$1 () {
-	if (hasRequiredUtils$1) return utils$1;
-	hasRequiredUtils$1 = 1;
+function requireUtils$2 () {
+	if (hasRequiredUtils$2) return utils$2;
+	hasRequiredUtils$2 = 1;
 	// We use any as a valid input type
 	/* eslint-disable @typescript-eslint/no-explicit-any */
-	Object.defineProperty(utils$1, "__esModule", { value: true });
-	utils$1.toCommandProperties = utils$1.toCommandValue = void 0;
+	Object.defineProperty(utils$2, "__esModule", { value: true });
+	utils$2.toCommandProperties = utils$2.toCommandValue = void 0;
 	/**
 	 * Sanitizes an input into a string so it can be passed into issueCommand safely
 	 * @param input input to sanitize into a string
@@ -67,7 +67,7 @@ function requireUtils$1 () {
 	    }
 	    return JSON.stringify(input);
 	}
-	utils$1.toCommandValue = toCommandValue;
+	utils$2.toCommandValue = toCommandValue;
 	/**
 	 *
 	 * @param annotationProperties
@@ -87,9 +87,9 @@ function requireUtils$1 () {
 	        endColumn: annotationProperties.endColumn
 	    };
 	}
-	utils$1.toCommandProperties = toCommandProperties;
+	utils$2.toCommandProperties = toCommandProperties;
 	
-	return utils$1;
+	return utils$2;
 }
 
 var hasRequiredCommand;
@@ -123,7 +123,7 @@ function requireCommand () {
 	Object.defineProperty(command, "__esModule", { value: true });
 	command.issue = command.issueCommand = void 0;
 	const os = __importStar(require$$0);
-	const utils_1 = requireUtils$1();
+	const utils_1 = requireUtils$2();
 	/**
 	 * Commands
 	 *
@@ -233,7 +233,7 @@ function requireFileCommand () {
 	const crypto = __importStar(require$$0$1);
 	const fs = __importStar(require$$1);
 	const os = __importStar(require$$0);
-	const utils_1 = requireUtils$1();
+	const utils_1 = requireUtils$2();
 	function issueFileCommand(command, message) {
 	    const filePath = process.env[`GITHUB_${command}`];
 	    if (!filePath) {
@@ -3573,7 +3573,7 @@ function requireUtil$5 () {
 	const { performance } = require$$2$1;
 	const { isBlobLike, toUSVString, ReadableStreamFrom } = requireUtil$6();
 	const assert = require$$0$3;
-	const { isUint8Array } = require$$5;
+	const { isUint8Array } = require$$1$3;
 
 	let supportedHashes = [];
 
@@ -6670,7 +6670,7 @@ function requireBody () {
 	const { kBodyUsed } = requireSymbols$4();
 	const assert = require$$0$3;
 	const { isErrored } = requireUtil$6();
-	const { isUint8Array, isArrayBuffer } = require$$5;
+	const { isUint8Array, isArrayBuffer } = require$$1$3;
 	const { File: UndiciFile } = requireFile();
 	const { parseMIMEType, serializeAMimeType } = requireDataURL();
 
@@ -8199,15 +8199,15 @@ function requireConnect () {
 
 var constants$3 = {};
 
-var utils = {};
+var utils$1 = {};
 
-var hasRequiredUtils;
+var hasRequiredUtils$1;
 
-function requireUtils () {
-	if (hasRequiredUtils) return utils;
-	hasRequiredUtils = 1;
-	Object.defineProperty(utils, "__esModule", { value: true });
-	utils.enumToMap = void 0;
+function requireUtils$1 () {
+	if (hasRequiredUtils$1) return utils$1;
+	hasRequiredUtils$1 = 1;
+	Object.defineProperty(utils$1, "__esModule", { value: true });
+	utils$1.enumToMap = void 0;
 	function enumToMap(obj) {
 	    const res = {};
 	    Object.keys(obj).forEach((key) => {
@@ -8218,9 +8218,9 @@ function requireUtils () {
 	    });
 	    return res;
 	}
-	utils.enumToMap = enumToMap;
+	utils$1.enumToMap = enumToMap;
 	
-	return utils;
+	return utils$1;
 }
 
 var hasRequiredConstants$3;
@@ -8231,7 +8231,7 @@ function requireConstants$3 () {
 	(function (exports) {
 		Object.defineProperty(exports, "__esModule", { value: true });
 		exports.SPECIAL_HEADERS = exports.HEADER_STATE = exports.MINOR = exports.MAJOR = exports.CONNECTION_TOKEN_CHARS = exports.HEADER_CHARS = exports.TOKEN = exports.STRICT_TOKEN = exports.HEX = exports.URL_CHAR = exports.STRICT_URL_CHAR = exports.USERINFO_CHARS = exports.MARK = exports.ALPHANUM = exports.NUM = exports.HEX_MAP = exports.NUM_MAP = exports.ALPHA = exports.FINISH = exports.H_METHOD_MAP = exports.METHOD_MAP = exports.METHODS_RTSP = exports.METHODS_ICE = exports.METHODS_HTTP = exports.METHODS = exports.LENIENT_FLAGS = exports.FLAGS = exports.TYPE = exports.ERROR = void 0;
-		const utils_1 = requireUtils();
+		const utils_1 = requireUtils$1();
 		(function (ERROR) {
 		    ERROR[ERROR["OK"] = 0] = "OK";
 		    ERROR[ERROR["INTERNAL"] = 1] = "INTERNAL";
@@ -14117,7 +14117,7 @@ function requirePendingInterceptorsFormatter () {
 	hasRequiredPendingInterceptorsFormatter = 1;
 
 	const { Transform } = require$$0$5;
-	const { Console } = require$$1$3;
+	const { Console } = require$$1$4;
 
 	/**
 	 * Gets the output of `console.table(…)` as a string.
@@ -14344,7 +14344,7 @@ function requireProxyAgent () {
 	hasRequiredProxyAgent = 1;
 
 	const { kProxy, kClose, kDestroy, kInterceptors } = requireSymbols$4();
-	const { URL } = require$$1$4;
+	const { URL } = require$$1$5;
 	const Agent = requireAgent();
 	const Pool = requirePool();
 	const DispatcherBase = requireDispatcherBase();
@@ -25515,7 +25515,7 @@ function requirePathUtils () {
 	};
 	Object.defineProperty(pathUtils, "__esModule", { value: true });
 	pathUtils.toPlatformPath = pathUtils.toWin32Path = pathUtils.toPosixPath = void 0;
-	const path = __importStar(require$$1$5);
+	const path = __importStar(require$$1$6);
 	/**
 	 * toPosixPath converts the given path to the posix form. On Windows, \\ will be
 	 * replaced with /.
@@ -25602,7 +25602,7 @@ function requireIoUtil () {
 		Object.defineProperty(exports, "__esModule", { value: true });
 		exports.getCmdPath = exports.tryGetExecutablePath = exports.isRooted = exports.isDirectory = exports.exists = exports.READONLY = exports.UV_FS_O_EXLOCK = exports.IS_WINDOWS = exports.unlink = exports.symlink = exports.stat = exports.rmdir = exports.rm = exports.rename = exports.readlink = exports.readdir = exports.open = exports.mkdir = exports.lstat = exports.copyFile = exports.chmod = void 0;
 		const fs = __importStar(require$$1);
-		const path = __importStar(require$$1$5);
+		const path = __importStar(require$$1$6);
 		_a = fs.promises
 		// export const {open} = 'fs'
 		, exports.chmod = _a.chmod, exports.copyFile = _a.copyFile, exports.lstat = _a.lstat, exports.mkdir = _a.mkdir, exports.open = _a.open, exports.readdir = _a.readdir, exports.readlink = _a.readlink, exports.rename = _a.rename, exports.rm = _a.rm, exports.rmdir = _a.rmdir, exports.stat = _a.stat, exports.symlink = _a.symlink, exports.unlink = _a.unlink;
@@ -25792,7 +25792,7 @@ function requireIo () {
 	Object.defineProperty(io, "__esModule", { value: true });
 	io.findInPath = io.which = io.mkdirP = io.rmRF = io.mv = io.cp = void 0;
 	const assert_1 = require$$0$3;
-	const path = __importStar(require$$1$5);
+	const path = __importStar(require$$1$6);
 	const ioUtil = __importStar(requireIoUtil());
 	/**
 	 * Copies a file or folder.
@@ -26100,7 +26100,7 @@ function requireToolrunner () {
 	const os = __importStar(require$$0);
 	const events = __importStar(require$$4);
 	const child = __importStar(require$$2$2);
-	const path = __importStar(require$$1$5);
+	const path = __importStar(require$$1$6);
 	const io = __importStar(requireIo());
 	const ioUtil = __importStar(requireIoUtil());
 	const timers_1 = require$$6$1;
@@ -26942,9 +26942,9 @@ function requireCore () {
 		exports.platform = exports.toPlatformPath = exports.toWin32Path = exports.toPosixPath = exports.markdownSummary = exports.summary = exports.getIDToken = exports.getState = exports.saveState = exports.group = exports.endGroup = exports.startGroup = exports.info = exports.notice = exports.warning = exports.error = exports.debug = exports.isDebug = exports.setFailed = exports.setCommandEcho = exports.setOutput = exports.getBooleanInput = exports.getMultilineInput = exports.getInput = exports.addPath = exports.setSecret = exports.exportVariable = exports.ExitCode = void 0;
 		const command_1 = requireCommand();
 		const file_command_1 = requireFileCommand();
-		const utils_1 = requireUtils$1();
+		const utils_1 = requireUtils$2();
 		const os = __importStar(require$$0);
-		const path = __importStar(require$$1$5);
+		const path = __importStar(require$$1$6);
 		const oidc_utils_1 = requireOidcUtils();
 		/**
 		 * The code to exit an action
@@ -35165,6 +35165,10 @@ const glob = Object.assign(glob_, {
 });
 glob.glob = glob;
 
+var ui5VersionCheck$1 = {};
+
+var ui5VersionApi = {};
+
 var re = {exports: {}};
 
 var constants;
@@ -37818,7 +37822,568 @@ function requireSemver () {
 	return semver;
 }
 
-var semverExports = requireSemver();
+var hasRequiredUi5VersionApi;
+
+function requireUi5VersionApi () {
+	if (hasRequiredUi5VersionApi) return ui5VersionApi;
+	hasRequiredUi5VersionApi = 1;
+	(function (exports) {
+		var __createBinding = (ui5VersionApi && ui5VersionApi.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+		    if (k2 === undefined) k2 = k;
+		    var desc = Object.getOwnPropertyDescriptor(m, k);
+		    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+		      desc = { enumerable: true, get: function() { return m[k]; } };
+		    }
+		    Object.defineProperty(o, k2, desc);
+		}) : (function(o, m, k, k2) {
+		    if (k2 === undefined) k2 = k;
+		    o[k2] = m[k];
+		}));
+		var __setModuleDefault = (ui5VersionApi && ui5VersionApi.__setModuleDefault) || (Object.create ? (function(o, v) {
+		    Object.defineProperty(o, "default", { enumerable: true, value: v });
+		}) : function(o, v) {
+		    o["default"] = v;
+		});
+		var __importStar = (ui5VersionApi && ui5VersionApi.__importStar) || function (mod) {
+		    if (mod && mod.__esModule) return mod;
+		    var result = {};
+		    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+		    __setModuleDefault(result, mod);
+		    return result;
+		};
+		Object.defineProperty(exports, "__esModule", { value: true });
+		exports.latestVersion = exports.isUI5VersionList = exports.UI5VersionPatch = exports.UI5Version = exports.BaseVersionInfo = exports.fetchMaintainedVersions = void 0;
+		const semver = __importStar(requireSemver());
+		const types_1 = require$$1$3;
+		const VERSION_OVERVIEW_URL = "https://ui5.sap.com/versionoverview.json";
+		/**
+		 * @returns array of valid UI5 versions to be used in SAP BTP
+		 */
+		async function fetchMaintainedVersions() {
+		    const res = await fetch(VERSION_OVERVIEW_URL);
+		    const ui5Versions = (await res.json());
+		    const patchMap = new Map();
+		    ui5Versions.patches
+		        .filter((p) => !p.removed && !p.hidden)
+		        .forEach((p) => {
+		        patchMap.set(p.version, new UI5VersionPatch(semver.coerce(p.version), p.eocp));
+		    });
+		    if (!ui5Versions.versions?.length)
+		        throw new Error(`No UI5 versions found in response`);
+		    const versionMap = new Map();
+		    ui5Versions.versions.forEach((v) => {
+		        versionMap.set(v.version, new UI5Version(semver.coerce(v.version), v.eocp, v.lts, v.support !== "Maintenance"));
+		    });
+		    return { versions: versionMap, patches: patchMap };
+		}
+		exports.fetchMaintainedVersions = fetchMaintainedVersions;
+		class BaseVersionInfo {
+		    static quarterToEocpInfo = new Map();
+		    eocpYearQuarter;
+		    semver;
+		    constructor(semver, eocp) {
+		        this.semver = semver;
+		        this.eocpYearQuarter = eocp;
+		    }
+		    get eocp() {
+		        return !!this.checkEocp()?.eocp;
+		    }
+		    get eocpDate() {
+		        return this.checkEocp()?.eocpDate;
+		    }
+		    get isInEocpQuarter() {
+		        return !!this.checkEocp()?.inEocpQuarter;
+		    }
+		    get remainingDaysToEocp() {
+		        return this.checkEocp()?.remainingDaysToEocp;
+		    }
+		    checkEocp() {
+		        let eocpInfo = BaseVersionInfo.quarterToEocpInfo.get(this.eocpYearQuarter);
+		        if (eocpInfo !== undefined)
+		            return eocpInfo;
+		        const matchRes = this.eocpYearQuarter.match(/Q([1-4])\/(\d+)/);
+		        if (!matchRes?.length)
+		            return undefined;
+		        const quarter = parseInt(matchRes[1]);
+		        const month = quarter === 1 ? 0 : quarter === 2 ? 3 : quarter === 3 ? 6 : 9;
+		        const year = parseInt(matchRes[2]);
+		        const dateForYearQuarterStart = new Date(Date.UTC(year, month, 1));
+		        const dateForYearQuarterEnd = new Date(Date.UTC(year, month + 3, 0));
+		        const now = new Date();
+		        eocpInfo = {
+		            eocp: now > dateForYearQuarterEnd,
+		            eocpDate: dateForYearQuarterEnd, // NOTE: there is actually a 1 week buffer until removal
+		            inEocpQuarter: dateForYearQuarterStart < now && dateForYearQuarterEnd > now,
+		            remainingDaysToEocp: dateForYearQuarterStart > now || now > dateForYearQuarterEnd
+		                ? -1
+		                : Math.floor(Math.abs(dateForYearQuarterEnd.valueOf() - now.valueOf()) / (1000 * 60 * 60 * 24))
+		        };
+		        BaseVersionInfo.quarterToEocpInfo.set(this.eocpYearQuarter, eocpInfo);
+		        return eocpInfo;
+		    }
+		}
+		exports.BaseVersionInfo = BaseVersionInfo;
+		class UI5Version extends BaseVersionInfo {
+		    lts;
+		    eom;
+		    constructor(semver, eocp, lts, eom) {
+		        super(semver, eocp);
+		        this.lts = lts;
+		        this.eom = eom;
+		    }
+		}
+		exports.UI5Version = UI5Version;
+		class UI5VersionPatch extends BaseVersionInfo {
+		}
+		exports.UI5VersionPatch = UI5VersionPatch;
+		const isUI5VersionList = (obj) => typeof obj === "object" && obj && "versions" in obj && "patches" in obj;
+		exports.isUI5VersionList = isUI5VersionList;
+		function latestVersion(versionsOrLts, lts) {
+		    let versionOverview;
+		    let ltsOpt;
+		    if ((0, exports.isUI5VersionList)(versionsOrLts)) {
+		        versionOverview = versionsOrLts;
+		        ltsOpt = !!lts;
+		    }
+		    else {
+		        versionOverview = fetchMaintainedVersions();
+		        ltsOpt = !!versionsOrLts;
+		    }
+		    const findVersion = (versionList) => {
+		        for (const [vId, v] of versionList.versions) {
+		            if (v.eocp || v.eom)
+		                continue;
+		            if (ltsOpt && !v.lts)
+		                continue;
+		            return vId;
+		        }
+		        if (ltsOpt) {
+		            throw new Error(`No valid LTS UI5 version found`);
+		        }
+		        else {
+		            throw new Error(`No valid UI5 version found`);
+		        }
+		    };
+		    if ((0, types_1.isPromise)(versionOverview)) {
+		        return versionOverview.then(findVersion);
+		    }
+		    else {
+		        return findVersion(versionOverview);
+		    }
+		}
+		exports.latestVersion = latestVersion; 
+	} (ui5VersionApi));
+	return ui5VersionApi;
+}
+
+var ui5VersionCheck = {};
+
+var ui5Manifest = {};
+
+var versionValidation = {};
+
+var hasRequiredVersionValidation;
+
+function requireVersionValidation () {
+	if (hasRequiredVersionValidation) return versionValidation;
+	hasRequiredVersionValidation = 1;
+	var __createBinding = (versionValidation && versionValidation.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+	    if (k2 === undefined) k2 = k;
+	    var desc = Object.getOwnPropertyDescriptor(m, k);
+	    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+	      desc = { enumerable: true, get: function() { return m[k]; } };
+	    }
+	    Object.defineProperty(o, k2, desc);
+	}) : (function(o, m, k, k2) {
+	    if (k2 === undefined) k2 = k;
+	    o[k2] = m[k];
+	}));
+	var __setModuleDefault = (versionValidation && versionValidation.__setModuleDefault) || (Object.create ? (function(o, v) {
+	    Object.defineProperty(o, "default", { enumerable: true, value: v });
+	}) : function(o, v) {
+	    o["default"] = v;
+	});
+	var __importStar = (versionValidation && versionValidation.__importStar) || function (mod) {
+	    if (mod && mod.__esModule) return mod;
+	    var result = {};
+	    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+	    __setModuleDefault(result, mod);
+	    return result;
+	};
+	Object.defineProperty(versionValidation, "__esModule", { value: true });
+	versionValidation.validateVersion = versionValidation.parseVersion = versionValidation.VersionValidator = void 0;
+	const semver = __importStar(requireSemver());
+	const types_1 = require$$1$3;
+	const ui5_version_api_1 = requireUi5VersionApi();
+	class VersionValidator {
+	    version;
+	    versionOverview;
+	    opts;
+	    isValid = false;
+	    messages = [];
+	    constructor(version, versionOverview, opts) {
+	        this.version = version;
+	        this.versionOverview = versionOverview;
+	        this.opts = opts;
+	    }
+	    validate() {
+	        if (this.version.patchUpdates) {
+	            this.validatePatchUpdateVersion();
+	        }
+	        else {
+	            this.validateSpecificVersion();
+	        }
+	        return { valid: this.isValid, messages: this.messages };
+	    }
+	    validateSpecificVersion() {
+	        const matchingVersion = this.versionOverview.versions.get(this.version.toPatchUpdateVers());
+	        if (!matchingVersion || matchingVersion.eocp) {
+	            this.addInvalidMsg();
+	            return;
+	        }
+	        if (!this.checkEom(matchingVersion.eom))
+	            return;
+	        const matchingPatch = this.versionOverview.patches.get(this.version.strVer);
+	        if (!matchingPatch) {
+	            const patchSemver = this.version.semver;
+	            this.messages.push({
+	                msg: `Patch ${patchSemver.patch} of version ${patchSemver.major}.${patchSemver.minor} is not available`,
+	                type: "error"
+	            });
+	            return;
+	        }
+	        if (this.checkRemainingDays(matchingPatch)) {
+	            this.isValid = true;
+	        }
+	    }
+	    validatePatchUpdateVersion() {
+	        const matchingVersion = this.versionOverview.versions.get(this.version.strVer);
+	        if (!matchingVersion || matchingVersion.eocp) {
+	            this.addInvalidMsg();
+	            return;
+	        }
+	        if (!this.checkEom(matchingVersion.eom))
+	            return;
+	        if (this.checkRemainingDays(matchingVersion)) {
+	            this.isValid = true;
+	        }
+	    }
+	    checkEom(eom) {
+	        if (!eom)
+	            return true;
+	        const msg = `Version reached end of maintenance!`;
+	        const type = this.opts.eomAllowed ? "warn" : "error";
+	        this.messages.push({ msg, type });
+	        return type !== "error";
+	    }
+	    addInvalidMsg() {
+	        this.messages.push({
+	            msg: `Version ${this.version.strVer} is invalid or reached end of cloud provisioning!`,
+	            type: "error"
+	        });
+	    }
+	    checkRemainingDays(version) {
+	        const { isInEocpQuarter, remainingDaysToEocp } = version;
+	        if (isInEocpQuarter && remainingDaysToEocp) {
+	            if (remainingDaysToEocp < this.opts.allowedDaysBeforeEocp) {
+	                this.messages.push({
+	                    msg: `End of cloud provisioning for version imminent (${remainingDaysToEocp} days remaining)!`,
+	                    type: "error"
+	                });
+	                return false;
+	            }
+	            else {
+	                this.messages.push({
+	                    msg: `Version is near the end of cloud provisioning (${remainingDaysToEocp} days remaining)!`,
+	                    type: "warn"
+	                });
+	                return true;
+	            }
+	        }
+	        return true;
+	    }
+	}
+	versionValidation.VersionValidator = VersionValidator;
+	/**
+	 * Parses the given version string
+	 *
+	 * @param v version string (e.g. 1.71.1, 1.120.*)
+	 * @returns parsed version including a semver version
+	 */
+	function parseVersion(v) {
+	    const semVer = semver.coerce(v);
+	    return {
+	        strVer: v,
+	        semver: semVer,
+	        patchUpdates: /\d+\.\d+\.\*/.test(v),
+	        toPatchUpdateVers: () => `${semVer?.major}.${semVer?.minor}.*`
+	    };
+	}
+	versionValidation.parseVersion = parseVersion;
+	function validateVersion(version, ui5VersionsOrOpts, opts) {
+	    let versionOverview;
+	    let validationOptions;
+	    if ((0, ui5_version_api_1.isUI5VersionList)(ui5VersionsOrOpts)) {
+	        versionOverview = ui5VersionsOrOpts;
+	        validationOptions = {
+	            allowedDaysBeforeEocp: opts?.allowedDaysBeforeEocp ?? 30,
+	            eomAllowed: opts?.eomAllowed ?? true
+	        };
+	    }
+	    else {
+	        versionOverview = (0, ui5_version_api_1.fetchMaintainedVersions)();
+	        validationOptions = {
+	            allowedDaysBeforeEocp: ui5VersionsOrOpts?.allowedDaysBeforeEocp ?? 30,
+	            eomAllowed: ui5VersionsOrOpts?.eomAllowed ?? true
+	        };
+	    }
+	    const versions = typeof version === "string" ? [version] : version;
+	    return (0, types_1.isPromise)(versionOverview)
+	        ? versionOverview.then((fetchedVersions) => versions.map((x) => ({
+	            version: x,
+	            ...new VersionValidator(parseVersion(x), fetchedVersions, validationOptions).validate()
+	        })))
+	        : versions.map((x) => ({
+	            version: x,
+	            ...new VersionValidator(parseVersion(x), versionOverview, validationOptions).validate()
+	        }));
+	}
+	versionValidation.validateVersion = validateVersion;
+	return versionValidation;
+}
+
+var hasRequiredUi5Manifest;
+
+function requireUi5Manifest () {
+	if (hasRequiredUi5Manifest) return ui5Manifest;
+	hasRequiredUi5Manifest = 1;
+	var __importDefault = (ui5Manifest && ui5Manifest.__importDefault) || function (mod) {
+	    return (mod && mod.__esModule) ? mod : { "default": mod };
+	};
+	Object.defineProperty(ui5Manifest, "__esModule", { value: true });
+	ui5Manifest.UI5AppManifest = void 0;
+	const fs_1 = require$$1;
+	const path_1 = __importDefault(require$$1$6);
+	const version_validation_1 = requireVersionValidation();
+	class UI5AppManifest {
+	    relPath;
+	    fullPath;
+	    content;
+	    version;
+	    newVersion = "-";
+	    versionStatus = "ok";
+	    versionStatusText = "-";
+	    constructor(repoPath, relPath) {
+	        this.relPath = relPath;
+	        this.fullPath = path_1.default.join(repoPath, this.relPath);
+	        this.content = (0, fs_1.readFileSync)(this.fullPath, { encoding: "utf8" });
+	        this.version = this.determineVersion();
+	    }
+	    determineVersion() {
+	        const manifestJson = JSON.parse(this.content);
+	        const currentVersionStr = manifestJson["sap.platform.cf"]?.ui5VersionNumber?.replace(/[xX]/, "*");
+	        if (!currentVersionStr) {
+	            this.versionStatusText = `No section 'sap.platform.cf/ui5VersionNumber' found. Skipping check`;
+	            return;
+	        }
+	        return (0, version_validation_1.parseVersion)(currentVersionStr);
+	    }
+	    updateVersion(version, isLTS) {
+	        const manifestContent = this.content.replace(/("sap\.platform\.cf"\s*:\s*\{\s*"ui5VersionNumber"\s*:\s*")(.*)(")/, `$1${version}$3`);
+	        (0, fs_1.writeFileSync)(this.fullPath, manifestContent, { encoding: "utf8" });
+	        this.newVersion = version;
+	        /* istanbul ignore next */
+	        this.versionStatusText = `Version has been updated to latest${isLTS ? " LTS " : " "}version`;
+	        this.versionStatus = "ok";
+	    }
+	    setNoChangeStatus(messages) {
+	        if (messages.length) {
+	            this.versionStatus = "warn";
+	            this.versionStatusText = messages.map((m) => m.msg).join("<br/>");
+	        }
+	        else {
+	            this.versionStatus = "ok";
+	            this.versionStatusText = `No change required`;
+	        }
+	    }
+	    setErrorStatus(messages) {
+	        this.versionStatus = "error";
+	        this.versionStatusText = messages.map((m) => m.msg).join("<br/>");
+	    }
+	    getCheckSummary() {
+	        return {
+	            relPath: this.relPath,
+	            oldVers: this.version?.strVer ?? "-",
+	            newVers: this.newVersion,
+	            status: this.versionStatus,
+	            statusIcon: this.versionStatus === "ok" ? "✅" : this.versionStatus === "warn" ? "⚠️" : "❌",
+	            statusText: this.versionStatusText
+	        };
+	    }
+	}
+	ui5Manifest.UI5AppManifest = UI5AppManifest;
+	return ui5Manifest;
+}
+
+var utils = {};
+
+var hasRequiredUtils;
+
+function requireUtils () {
+	if (hasRequiredUtils) return utils;
+	hasRequiredUtils = 1;
+	Object.defineProperty(utils, "__esModule", { value: true });
+	utils.getLogger = utils.setLogger = void 0;
+	let logger;
+	/**
+	 * Sets custom logger for use during version validation
+	 */
+	function setLogger(l) {
+	    logger = l;
+	}
+	utils.setLogger = setLogger;
+	/**
+	 * Retrieves logger. If no custom logger has been set `console` will be
+	 * the default logging output
+	 */
+	function getLogger() {
+	    if (!logger)
+	        logger = {
+	            info: console.info,
+	            group: console.group,
+	            groupEnd: console.groupEnd,
+	            warn: console.warn,
+	            error: console.error,
+	            notice: console.info
+	        };
+	    return logger;
+	}
+	utils.getLogger = getLogger;
+	return utils;
+}
+
+var hasRequiredUi5VersionCheck$1;
+
+function requireUi5VersionCheck$1 () {
+	if (hasRequiredUi5VersionCheck$1) return ui5VersionCheck;
+	hasRequiredUi5VersionCheck$1 = 1;
+	Object.defineProperty(ui5VersionCheck, "__esModule", { value: true });
+	ui5VersionCheck.UI5VersionCheck = void 0;
+	const ui5_manifest_1 = requireUi5Manifest();
+	const ui5_version_api_1 = requireUi5VersionApi();
+	const utils_1 = requireUtils();
+	const version_validation_1 = requireVersionValidation();
+	class UI5VersionCheck {
+	    ui5Versions;
+	    _updatedFiles = [];
+	    errorCount = 0;
+	    _summary = [];
+	    _newVersion;
+	    opts;
+	    logger = (0, utils_1.getLogger)();
+	    constructor(opts) {
+	        this.opts = {
+	            basePath: opts.basePath,
+	            manifestPaths: opts.manifestPaths,
+	            allowedDaysBeforeEocp: opts.allowedDaysBeforeEocp ?? 30,
+	            useLTS: opts.useLTS ?? true,
+	            eomAllowed: opts.eomAllowed ?? true,
+	            fixOutdated: opts.fixOutdated ?? false
+	        };
+	    }
+	    async run() {
+	        this.logger.group("Loading UI5 versions");
+	        this.ui5Versions = await (0, ui5_version_api_1.fetchMaintainedVersions)();
+	        this.logger.info(`Found ${this.ui5Versions.versions.size} versions and ${this.ui5Versions.patches.size} patches`);
+	        this.logger.groupEnd();
+	        this.logger.group("Checking UI5 versions in manifest.json files");
+	        this.opts.manifestPaths.forEach((mp) => {
+	            const manifest = new ui5_manifest_1.UI5AppManifest(this.opts.basePath, mp);
+	            this.checkManifest(manifest);
+	            this._summary.push(manifest.getCheckSummary());
+	        });
+	        this.logger.groupEnd();
+	    }
+	    get hasErrors() {
+	        return this.errorCount > 0;
+	    }
+	    get summary() {
+	        return this._summary;
+	    }
+	    get updatedFiles() {
+	        return this._updatedFiles;
+	    }
+	    get newVersion() {
+	        if (this._newVersion)
+	            return this._newVersion;
+	        this._newVersion = (0, ui5_version_api_1.latestVersion)(this.ui5Versions, this.opts.useLTS);
+	        return this._newVersion;
+	    }
+	    checkManifest(manifest) {
+	        if (!manifest?.version)
+	            return;
+	        this.logger.info(`Checking version ${manifest.version.strVer} in manifest at ${manifest.relPath}`);
+	        const { valid, messages } = this.validateVersion(manifest);
+	        if (this.opts.fixOutdated) {
+	            if (!valid) {
+	                // fix the version in the manifest
+	                manifest.updateVersion(this.newVersion, this.opts.useLTS);
+	                this._updatedFiles.push(manifest.relPath);
+	            }
+	            else {
+	                manifest.setNoChangeStatus(messages);
+	            }
+	        }
+	        else {
+	            if (valid) {
+	                manifest.setNoChangeStatus(messages);
+	            }
+	            else {
+	                this.errorCount++;
+	                manifest.setErrorStatus(messages);
+	            }
+	        }
+	    }
+	    validateVersion(manifest) {
+	        if (!manifest.version) {
+	            /* istanbul ignore next */
+	            return { valid: false, messages: [] };
+	        }
+	        else {
+	            const validator = new version_validation_1.VersionValidator(manifest.version, this.ui5Versions, this.opts);
+	            return validator.validate();
+	        }
+	    }
+	}
+	ui5VersionCheck.UI5VersionCheck = UI5VersionCheck;
+	return ui5VersionCheck;
+}
+
+var hasRequiredUi5VersionCheck;
+
+function requireUi5VersionCheck () {
+	if (hasRequiredUi5VersionCheck) return ui5VersionCheck$1;
+	hasRequiredUi5VersionCheck = 1;
+	(function (exports) {
+		Object.defineProperty(exports, "__esModule", { value: true });
+		exports.getLogger = exports.setLogger = exports.latestVersion = exports.parseVersion = exports.validateVersion = exports.VersionValidator = exports.UI5VersionCheck = exports.fetchMaintainedVersions = void 0;
+		const ui5_version_api_1 = requireUi5VersionApi();
+		Object.defineProperty(exports, "fetchMaintainedVersions", { enumerable: true, get: function () { return ui5_version_api_1.fetchMaintainedVersions; } });
+		Object.defineProperty(exports, "latestVersion", { enumerable: true, get: function () { return ui5_version_api_1.latestVersion; } });
+		const ui5_version_check_1 = requireUi5VersionCheck$1();
+		Object.defineProperty(exports, "UI5VersionCheck", { enumerable: true, get: function () { return ui5_version_check_1.UI5VersionCheck; } });
+		const version_validation_1 = requireVersionValidation();
+		Object.defineProperty(exports, "VersionValidator", { enumerable: true, get: function () { return version_validation_1.VersionValidator; } });
+		Object.defineProperty(exports, "validateVersion", { enumerable: true, get: function () { return version_validation_1.validateVersion; } });
+		Object.defineProperty(exports, "parseVersion", { enumerable: true, get: function () { return version_validation_1.parseVersion; } });
+		const utils_1 = requireUtils();
+		Object.defineProperty(exports, "getLogger", { enumerable: true, get: function () { return utils_1.getLogger; } });
+		Object.defineProperty(exports, "setLogger", { enumerable: true, get: function () { return utils_1.setLogger; } }); 
+	} (ui5VersionCheck$1));
+	return ui5VersionCheck$1;
+}
+
+var ui5VersionCheckExports = requireUi5VersionCheck();
 
 function getAllowedDaysBeforeEocp() {
     const configuredTime = parseInt(coreExports.getInput("allowedDaysBeforeEocp", { trimWhitespace: true }));
@@ -37829,7 +38394,7 @@ function getRepoPath() {
     if (!githubWorkspace) {
         throw new Error("GITHUB_WORKSPACE not defined");
     }
-    const repoPath = require$$1$5.resolve(githubWorkspace);
+    const repoPath = require$$1$6.resolve(githubWorkspace);
     coreExports.debug(`repoPath: ${repoPath}`);
     return repoPath;
 }
@@ -37843,348 +38408,24 @@ function getStringAsArray(str) {
         .filter((x) => x !== "");
 }
 
-class UI5AppManifest {
-    relPath;
-    fullPath;
-    content;
-    version;
-    newVersion = "-";
-    versionStatus = "ok";
-    versionStatusText = "-";
-    constructor(relPath) {
-        this.relPath = relPath;
-        this.fullPath = require$$1$5.join(getRepoPath(), this.relPath);
-        this.content = readFileSync(this.fullPath, { encoding: "utf8" });
-        this.version = this.determineVersion();
-    }
-    determineVersion() {
-        const manifestJson = JSON.parse(this.content);
-        const currentVersionStr = manifestJson["sap.platform.cf"]?.ui5VersionNumber?.replace(/[xX]/, "*");
-        if (!currentVersionStr) {
-            this.versionStatusText = `No section 'sap.platform.cf/ui5VersionNumber' found. Skipping check`;
-            return;
-        }
-        const currentSemver = semverExports.coerce(currentVersionStr);
-        return {
-            strVer: currentVersionStr,
-            semver: currentSemver,
-            patchUpdates: /\d+\.\d+\.\*/.test(currentVersionStr),
-            toPatchUpdateVers: () => `${currentSemver?.major}.${currentSemver?.minor}.*`
-        };
-    }
-    updateVersion(version, isLTS) {
-        const manifestContent = this.content.replace(/("sap\.platform\.cf"\s*:\s*\{\s*"ui5VersionNumber"\s*:\s*")(.*)(")/, `$1${version}$3`);
-        writeFileSync(this.fullPath, manifestContent, { encoding: "utf8" });
-        this.newVersion = version;
-        /* istanbul ignore next */
-        this.versionStatusText = `Version has been updated to latest ${isLTS ? "LTS" : ""} version`;
-        this.versionStatus = "ok";
-    }
-    setNoChangeStatus(messages) {
-        if (messages.length) {
-            this.versionStatus = "warn";
-            this.versionStatusText = messages.map((m) => m.msg).join("<br/>");
-        }
-        else {
-            this.versionStatus = "ok";
-            this.versionStatusText = `No change required`;
-        }
-    }
-    setErrorStatus(messages) {
-        this.versionStatus = "error";
-        this.versionStatusText = messages.map((m) => m.msg).join("<br/>");
-    }
-    getSummary() {
-        return [
-            { data: this.relPath },
-            { data: this.version?.strVer ?? "-" },
-            { data: this.newVersion },
-            { data: this.versionStatus === "ok" ? "✅" : this.versionStatus === "warn" ? "⚠️" : "❌" },
-            { data: this.versionStatusText }
-        ];
-    }
+function printSummary(summary) {
+    coreExports.summary.addTable([
+        [
+            { data: "Manifest path", header: true },
+            { data: "Found version", header: true },
+            { data: "Updated version", header: true },
+            { data: "Status", header: true },
+            { data: "Description", header: true }
+        ],
+        ...summary.map((s) => [
+            { data: s.relPath },
+            { data: s.oldVers },
+            { data: s.newVers },
+            { data: s.statusIcon },
+            { data: s.statusText }
+        ])
+    ]);
 }
-
-const VERSION_OVERVIEW_URL = "https://ui5.sap.com/versionoverview.json";
-/**
- * @returns array of valid UI5 versions to be used in SAP BTP
- */
-async function fetchMaintainedVersions() {
-    coreExports.info(`Checking ${VERSION_OVERVIEW_URL} for available UI5 versions...`);
-    const res = await fetch(VERSION_OVERVIEW_URL);
-    const ui5Versions = (await res.json());
-    const patchMap = new Map();
-    ui5Versions.patches
-        .filter((p) => !p.removed && !p.hidden)
-        .forEach((p) => {
-        patchMap.set(p.version, new UI5VersionPatch(semverExports.coerce(p.version), p.eocp));
-    });
-    if (!ui5Versions.versions?.length)
-        throw new Error(`No UI5 versions found in response`);
-    const versionMap = new Map();
-    ui5Versions.versions.forEach((v) => {
-        versionMap.set(v.version, new UI5Version(semverExports.coerce(v.version), v.eocp, v.lts, v.support !== "Maintenance"));
-    });
-    return { versions: versionMap, patches: patchMap };
-}
-class BaseVersionInfo {
-    static quarterToEocpInfo = new Map();
-    eocpYearQuarter;
-    semver;
-    constructor(semver, eocp) {
-        this.semver = semver;
-        this.eocpYearQuarter = eocp;
-    }
-    get eocp() {
-        return !!this.checkEocp()?.eocp;
-    }
-    get eocpDate() {
-        return this.checkEocp()?.eocpDate;
-    }
-    get isInEocpQuarter() {
-        return !!this.checkEocp()?.inEocpQuarter;
-    }
-    get remainingDaysToEocp() {
-        return this.checkEocp()?.remainingDaysToEocp;
-    }
-    checkEocp() {
-        let eocpInfo = BaseVersionInfo.quarterToEocpInfo.get(this.eocpYearQuarter);
-        if (eocpInfo !== undefined)
-            return eocpInfo;
-        const matchRes = this.eocpYearQuarter.match(/Q([1-4])\/(\d+)/);
-        if (!matchRes?.length)
-            return undefined;
-        const quarter = parseInt(matchRes[1]);
-        const month = quarter === 1 ? 0 : quarter === 2 ? 3 : quarter === 3 ? 6 : 9;
-        const year = parseInt(matchRes[2]);
-        const dateForYearQuarterStart = new Date(Date.UTC(year, month, 1));
-        const dateForYearQuarterEnd = new Date(Date.UTC(year, month + 3, 0));
-        const now = new Date();
-        eocpInfo = {
-            eocp: now > dateForYearQuarterEnd,
-            eocpDate: dateForYearQuarterEnd, // NOTE: there is actually a 1 week buffer until removal
-            inEocpQuarter: dateForYearQuarterStart < now && dateForYearQuarterEnd > now,
-            remainingDaysToEocp: dateForYearQuarterStart > now || now > dateForYearQuarterEnd
-                ? -1
-                : Math.floor(Math.abs(dateForYearQuarterEnd.valueOf() - now.valueOf()) / (1000 * 60 * 60 * 24))
-        };
-        BaseVersionInfo.quarterToEocpInfo.set(this.eocpYearQuarter, eocpInfo);
-        return eocpInfo;
-    }
-}
-class UI5Version extends BaseVersionInfo {
-    lts;
-    eom;
-    constructor(semver, eocp, lts, eom) {
-        super(semver, eocp);
-        this.lts = lts;
-        this.eom = eom;
-    }
-}
-class UI5VersionPatch extends BaseVersionInfo {
-}
-
-class VersionValidator {
-    mfVers;
-    ui5Versions;
-    ui5Patches;
-    allowedDaysBeforeEocp;
-    eomAllowed;
-    isValid = false;
-    messages = [];
-    constructor(mfVers, ui5Versions, ui5Patches, allowedDaysBeforeEocp, eomAllowed) {
-        this.mfVers = mfVers;
-        this.ui5Versions = ui5Versions;
-        this.ui5Patches = ui5Patches;
-        this.allowedDaysBeforeEocp = allowedDaysBeforeEocp;
-        this.eomAllowed = eomAllowed;
-    }
-    validate() {
-        if (this.mfVers.patchUpdates) {
-            this.validatePatchUpdateVersion();
-        }
-        else {
-            this.validateSpecificVersion();
-        }
-        return { valid: this.isValid, messages: this.messages };
-    }
-    validateSpecificVersion() {
-        const matchingVersion = this.ui5Versions.get(this.mfVers.toPatchUpdateVers());
-        if (!matchingVersion || matchingVersion.eocp) {
-            this.addInvalidMsg();
-            return;
-        }
-        if (!this.checkEom(matchingVersion.eom))
-            return;
-        const matchingPatch = this.ui5Patches.get(this.mfVers.strVer);
-        if (!matchingPatch) {
-            const patchSemver = this.mfVers.semver;
-            this.messages.push({
-                msg: `Patch ${patchSemver.patch} of version ${patchSemver.major}.${patchSemver.minor} is not available`,
-                type: "error"
-            });
-            return;
-        }
-        if (this.checkRemainingDays(matchingPatch)) {
-            this.isValid = true;
-        }
-    }
-    validatePatchUpdateVersion() {
-        const matchingVersion = this.ui5Versions.get(this.mfVers.strVer);
-        if (!matchingVersion || matchingVersion.eocp) {
-            this.addInvalidMsg();
-            return;
-        }
-        if (!this.checkEom(matchingVersion.eom))
-            return;
-        if (this.checkRemainingDays(matchingVersion)) {
-            this.isValid = true;
-        }
-    }
-    checkEom(eom) {
-        if (!eom)
-            return true;
-        const msg = `Version reached end of maintenance!`;
-        const type = this.eomAllowed ? "warn" : "error";
-        this.messages.push({ msg, type });
-        return type !== "error";
-    }
-    addInvalidMsg() {
-        this.messages.push({
-            msg: `Version ${this.mfVers.strVer} is invalid or reached end of cloud provisioning!`,
-            type: "error"
-        });
-    }
-    checkRemainingDays(version) {
-        const { isInEocpQuarter, remainingDaysToEocp } = version;
-        if (isInEocpQuarter && remainingDaysToEocp) {
-            if (remainingDaysToEocp < this.allowedDaysBeforeEocp) {
-                this.messages.push({
-                    msg: `End of cloud provisioning for version imminent (${remainingDaysToEocp} days remaining)!`,
-                    type: "error"
-                });
-                return false;
-            }
-            else {
-                this.messages.push({
-                    msg: `Version is near the end of cloud provisioning (${remainingDaysToEocp} days remaining)!`,
-                    type: "warn"
-                });
-                return true;
-            }
-        }
-        return true;
-    }
-}
-
-class UI5VersionChecker {
-    manifestPaths;
-    fixOutdated;
-    useLTS;
-    eomAllowed;
-    allowedDaysBeforeEocp;
-    ui5Versions;
-    ui5Patches;
-    updatedFiles = [];
-    errorCount = 0;
-    summary = [];
-    _newVersion;
-    constructor(manifestPaths) {
-        this.manifestPaths = manifestPaths;
-        this.fixOutdated = coreExports.getBooleanInput("fixOutdated");
-        this.useLTS = coreExports.getBooleanInput("useLTS");
-        this.eomAllowed = coreExports.getBooleanInput("eomAllowed");
-        this.allowedDaysBeforeEocp = getAllowedDaysBeforeEocp();
-    }
-    async run() {
-        coreExports.startGroup("Loading UI5 versions");
-        const versions = await fetchMaintainedVersions();
-        this.ui5Versions = versions.versions;
-        this.ui5Patches = versions.patches;
-        coreExports.endGroup();
-        coreExports.info("Checking UI5 version in manifest.json files");
-        this.manifestPaths.forEach((mp) => {
-            const manifest = new UI5AppManifest(mp);
-            this.checkManifest(manifest);
-            this.summary.push(manifest.getSummary());
-        });
-        if (this.updatedFiles.length) {
-            coreExports.setOutput("modifiedFiles", this.updatedFiles.join("\n"));
-        }
-    }
-    get hasErrors() {
-        return this.errorCount > 0;
-    }
-    printSummary() {
-        coreExports.summary.addHeading("UI5 Version Check Result");
-        coreExports.summary.addTable([
-            [
-                { data: "Manifest path", header: true },
-                { data: "Found version", header: true },
-                { data: "Updated version", header: true },
-                { data: "Status", header: true },
-                { data: "Description", header: true }
-            ],
-            ...this.summary
-        ]);
-    }
-    get newVersion() {
-        if (this._newVersion)
-            return this._newVersion;
-        for (const [vId, v] of this.ui5Versions) {
-            if (v.eocp || v.eom)
-                continue;
-            if (this.useLTS && !v.lts)
-                continue;
-            this._newVersion = vId;
-            break;
-        }
-        if (!this._newVersion) {
-            if (this.useLTS) {
-                throw new Error(`No valid LTS UI5 version found to update`);
-            }
-            else {
-                throw new Error(`No valid UI5 version found to update`);
-            }
-        }
-        return this._newVersion;
-    }
-    checkManifest(manifest) {
-        if (!manifest?.version)
-            return;
-        const { valid, messages } = this.validateVersion(manifest);
-        if (this.fixOutdated) {
-            if (!valid) {
-                // fix the version in the manifest
-                manifest.updateVersion(this.newVersion, this.useLTS);
-                this.updatedFiles.push(manifest.relPath);
-            }
-            else {
-                manifest.setNoChangeStatus(messages);
-            }
-        }
-        else {
-            if (valid) {
-                manifest.setNoChangeStatus(messages);
-            }
-            else {
-                this.errorCount++;
-                manifest.setErrorStatus(messages);
-            }
-        }
-    }
-    validateVersion(manifest) {
-        if (!manifest.version) {
-            /* istanbul ignore next */
-            return { valid: false, messages: [] };
-        }
-        else {
-            const validator = new VersionValidator(manifest.version, this.ui5Versions, this.ui5Patches, this.allowedDaysBeforeEocp, this.eomAllowed);
-            return validator.validate();
-        }
-    }
-}
-
 /**
  * The main function for the action.
  *
@@ -38205,12 +38446,30 @@ async function run() {
         coreExports.setOutput("foundManifests", resolvedManifestPaths);
         coreExports.info(`Resolved the following manifest file paths: ${resolvedManifestPaths}`);
         coreExports.endGroup();
-        const ui5VersChecker = new UI5VersionChecker(resolvedManifestPaths);
-        await ui5VersChecker.run();
-        ui5VersChecker.printSummary();
+        ui5VersionCheckExports.setLogger({
+            info: coreExports.info,
+            group: coreExports.startGroup,
+            groupEnd: coreExports.endGroup,
+            warn: coreExports.warning,
+            error: coreExports.error,
+            notice: coreExports.notice
+        });
+        const ui5VersCheck = new ui5VersionCheckExports.UI5VersionCheck({
+            basePath: repoPath,
+            manifestPaths: resolvedManifestPaths,
+            fixOutdated: coreExports.getBooleanInput("fixOutdated"),
+            useLTS: coreExports.getBooleanInput("useLTS"),
+            eomAllowed: coreExports.getBooleanInput("eomAllowed"),
+            allowedDaysBeforeEocp: getAllowedDaysBeforeEocp()
+        });
+        await ui5VersCheck.run();
+        if (ui5VersCheck.updatedFiles.length > 0) {
+            coreExports.setOutput("modifiedFiles", ui5VersCheck.updatedFiles.join("\n"));
+        }
+        printSummary(ui5VersCheck.summary);
         coreExports.summary.addBreak();
         coreExports.summary.addLink("Check this link for valid UI5 versions that can be used in SAP BTP", "https://ui5.sap.com/versionoverview.html");
-        if (ui5VersChecker.hasErrors) {
+        if (ui5VersCheck.hasErrors) {
             coreExports.setFailed("Some manifest.json files contain invalid/outdated versions");
         }
         coreExports.setOutput("summary", coreExports.summary.stringify());
