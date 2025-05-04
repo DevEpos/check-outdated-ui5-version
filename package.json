@@ -1,7 +1,7 @@
 {
   "name": "check-outdated-ui5-version",
   "description": "GitHub Action to check/update outdated UI5 versions, available on SAP BTP",
-  "version": "1.2.0",
+  "version": "1.3.0",
   "author": "DevEpos",
   "type": "module",
   "private": true,
