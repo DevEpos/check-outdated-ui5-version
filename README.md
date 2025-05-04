@@ -1,9 +1,8 @@
 # Check/update UI5 versions for use in Cloud Foundry
 
-[![GitHub Super-Linter](https://github.com/actions/typescript-action/actions/workflows/linter.yml/badge.svg)](https://github.com/super-linter/super-linter)
-![CI](https://github.com/actions/typescript-action/actions/workflows/ci.yml/badge.svg)
-[![Check dist/](https://github.com/actions/typescript-action/actions/workflows/check-dist.yml/badge.svg)](https://github.com/actions/typescript-action/actions/workflows/check-dist.yml)
-[![CodeQL](https://github.com/actions/typescript-action/actions/workflows/codeql-analysis.yml/badge.svg)](https://github.com/actions/typescript-action/actions/workflows/codeql-analysis.yml)
+[![GitHub Super-Linter](https://github.com/DevEpos/check-outdated-ui5-version/actions/workflows/linter.yml/badge.svg)](https://github.com/super-linter/super-linter)
+![CI](https://github.com/DevEpos/check-outdated-ui5-version/actions/workflows/ci.yml/badge.svg)
+[![Check dist/](https://github.com/DevEpos/check-outdated-ui5-version/actions/workflows/check-dist.yml/badge.svg)](https://github.com/DevEpos/check-outdated-ui5-version/actions/workflows/check-dist.yml)
 [![Coverage](./badges/coverage.svg)](./badges/coverage.svg)
 
 This GitHub Action can be used to check SAPUI5/OpenUI5 projects for the use of outdated versions (see
