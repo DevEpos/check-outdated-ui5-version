@@ -1,8 +1,8 @@
 {
   "name": "check-outdated-ui5-version",
   "description": "GitHub Action to check/update outdated UI5 versions, available on SAP BTP",
-  "version": "1.2.0",
-  "author": "",
+  "version": "1.3.0",
+  "author": "DevEpos",
   "type": "module",
   "private": true,
   "homepage": "https://github.com/DevEpos/check-outdated-ui5-version",
@@ -31,7 +31,8 @@
     "format:write": "npx prettier --write .",
     "format:check": "npx prettier --check .",
     "lint": "npx eslint .",
-    "local-action": "npx @github/local-action . src/main.ts .env",
+    "local-action": "INPUT_fixOutdated=false npx @github/local-action . src/main.ts .env",
+    "local-action:fix": "INPUT_fixOutdated=true npx @github/local-action . src/main.ts .env",
     "package": "npx rollup --config rollup.config.ts --configPlugin @rollup/plugin-typescript",
     "package:watch": "npm run package -- --watch",
     "test": "npx jest",
@@ -41,7 +42,8 @@
   "dependencies": {
     "@actions/core": "^1.11.1",
     "glob": "^11.0.2",
-    "semver": "^7.7.1"
+    "semver": "^7.7.1",
+    "ui5-version-check": "0.1.2"
   },
   "devDependencies": {
     "@eslint/compat": "^1.2.7",
