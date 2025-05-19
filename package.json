@@ -42,7 +42,7 @@
   "dependencies": {
     "@actions/core": "^1.11.1",
     "glob": "^11.0.2",
-    "semver": "^7.7.1",
+    "semver": "^7.7.2",
     "ui5-version-check": "0.1.2"
   },
   "devDependencies": {
